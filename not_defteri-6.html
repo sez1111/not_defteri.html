@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Not Defteri">
+<meta name="theme-color" content="#1e3a5f">
+<title>Not Defteri — Biyoloji</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --p:#1e3a5f;--a:#0ea5e9;--t:#0d9488;--g:#64748b;--b:#cbd5e1;
+  --gr:#16a34a;--ro:#f43f5e;--am:#f59e0b;--vi:#7c3aed;
+  --bg:#f0f7ff;--white:#fff;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);min-height:100vh;font-size:14px;}
+/* HEADER */
+#hdr{background:var(--p);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+#hdr .ht{font-size:16px;font-weight:800;letter-spacing:-.3px;}
+#hdr .hi{font-size:11px;color:#a8c8e8;}
+.hbtns{display:flex;gap:6px;flex-wrap:wrap;}
+/* TABS */
+#tabs{background:#162d4a;padding:0 12px;display:flex;gap:4px;flex-wrap:wrap;border-bottom:2px solid rgba(255,255,255,.1);}
+#tabs button{background:none;border:none;color:#7aa4c4;padding:10px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.2s;}
+#tabs button.active{color:#fff;border-bottom-color:var(--a);}
+/* MAIN */
+#main{max-width:1400px;margin:0 auto;padding:14px;}
+/* CARDS */
+.card{background:var(--white);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,.07);}
+.ctitle{font-size:14px;font-weight:700;color:var(--p);margin-bottom:12px;}
+/* TABS WITHIN PAGE */
+.stabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.stab{padding:5px 14px;border-radius:20px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:#f1f5f9;color:var(--g);font-family:inherit;transition:.15s;}
+.stab.active{background:var(--p);color:#fff;}
+/* TABLE */
+table{width:100%;border-collapse:collapse;}
+th{padding:7px 8px;text-align:center;font-size:11px;font-weight:600;white-space:nowrap;background:var(--p);color:#fff;}
+th.left{text-align:left;}
+td{padding:5px 8px;border-bottom:1px solid #f1f5f9;font-size:12px;text-align:center;}
+td.left{text-align:left;font-weight:600;}
+tr:hover td{background:#f8fafc;}
+/* INPUT */
+input[type=number],input[type=text],select{
+  border:1.5px solid var(--b);border-radius:6px;padding:4px 6px;
+  font-size:12px;font-family:inherit;outline:none;width:100%;
+  text-align:center;background:#fffbeb;
+}
+input[type=number]:focus,input[type=text]:focus,select:focus{border-color:var(--a);background:#fff;}
+input[type=number].ok{background:#dcfce7 !important;}
+input[type=number].warn{background:#fee2e2 !important;}
+/* BADGE */
+.bdg{padding:2px 8px;border-radius:8px;font-size:11px;font-weight:700;display:inline-block;}
+.bgr{background:#dcfce7;color:#166534;} .bro{background:#fee2e2;color:#991b1b;}
+.bam{background:#fef9c3;color:#92400e;} .bbl{background:#dbeafe;color:#1e40af;}
+.bvi{background:#ede9fe;color:#5b21b6;}
+/* SCORE CELL */
+.sc-aa{color:#166534;font-weight:800;} .sc-ba{color:#16a34a;font-weight:700;}
+.sc-bb{color:#0ea5e9;font-weight:700;} .sc-cb{color:#f59e0b;font-weight:700;}
+.sc-cc{color:#f97316;font-weight:700;} .sc-ff{color:#f43f5e;font-weight:700;}
+/* STAT CARDS */
+.sgrid{display:grid;gap:10px;margin-bottom:12px;}
+.sg3{grid-template-columns:repeat(3,1fr);}
+.sg4{grid-template-columns:repeat(4,1fr);}
+.sg6{grid-template-columns:repeat(6,1fr);}
+.scard{background:var(--white);border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.07);}
+.slbl{font-size:11px;color:var(--g);margin-bottom:3px;}
+.sval{font-size:22px;font-weight:800;color:var(--p);}
+/* BTN */
+.btn{display:inline-block;border:none;border-radius:7px;padding:7px 14px;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;color:#fff;white-space:nowrap;transition:.15s;}
+.btn:hover{opacity:.85;}
+.bp{background:var(--p);} .bt{background:var(--t);} .bg{background:var(--g);}
+.br{background:var(--ro);} .bam2{background:var(--am);} .bv{background:var(--vi);}
+.bsm{padding:4px 10px;font-size:11px;}
+/* PAGE */
+.page{display:none;} .page.active{display:block;}
+/* PRINT */
+@media print{
+  #hdr,#tabs,.btn,.no-print{display:none!important;}
+  .page{display:none!important;} .page.active{display:block!important;}
+  .card{box-shadow:none;border:1px solid #e2e8f0;break-inside:avoid;}
+  body{background:#fff;}
+}
+/* OVERLAY */
+#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;}
+#ov.show{display:flex;}
+#ovbox{background:#fff;border-radius:14px;padding:22px;max-width:420px;width:90%;max-height:90vh;overflow-y:auto;}
+#ov h3{font-size:15px;font-weight:700;color:var(--p);margin-bottom:14px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+label{font-size:12px;font-weight:600;color:var(--g);display:block;margin-bottom:3px;}
+/* RESPONSIVE */
+@media(max-width:600px){
+  .sg6{grid-template-columns:repeat(3,1fr);}
+  .sg4{grid-template-columns:repeat(2,1fr);}
+  #main{padding:8px;}
+}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <div>
+    <div class="ht">📒 Not Defteri</div>
+    <div class="hi" id="hdr-info">Yükleniyor...</div>
+  </div>
+  <div class="hbtns">
+    <button class="btn bt bsm" onclick="yedekAl()">💾 Yedek Al</button>
+    <button class="btn bg bsm" onclick="document.getElementById('yi').click()">📂 Yükle</button>
+    <input type="file" id="yi" accept=".json,.html" style="display:none" onchange="yedekYukle(this)"/>
+  </div>
+</div>
+
+<div id="grup-bar" style="background:#162d4a;padding:5px 12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.08);">
+  <span style="font-size:11px;color:#7aa4c4;font-weight:600;">📂 GRUP:</span>
+  <div id="grup-chips" style="display:flex;gap:4px;flex-wrap:wrap;flex:1;"></div>
+  <button class="btn bsm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);" onclick="yeniGrupAc()">+ Yeni Grup</button>
+</div>
+<div id="tabs">
+  <button class="active" onclick="goTab('giris',this)">📝 Not Girişi</button>
+  <button onclick="goTab('ozet',this)">📊 Özet</button>
+  <button onclick="goTab('karsilastirma',this)">⚖️ Karşılaştırma</button>
+  <button onclick="goTab('ogrenci',this)">👤 Öğrenci Kartı</button>
+  <button onclick="goTab('ayarlar',this)">⚙️ Ayarlar</button>
+</div>
+
+<div id="main">
+  <div id="pg-giris" class="page active"></div>
+  <div id="pg-ozet" class="page"></div>
+  <div id="pg-karsilastirma" class="page"></div>
+  <div id="pg-ogrenci" class="page"></div>
+  <div id="pg-ayarlar" class="page"></div>
+</div>
+
+<!-- Yeni Grup Overlay -->
+<div id="yg-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:14px;padding:22px;max-width:480px;width:92%;max-height:90vh;overflow-y:auto;">
+    <h3 style="font-size:15px;font-weight:700;color:#1e3a5f;margin-bottom:14px;">📂 Yeni Grup Oluştur</h3>
+    <div style="margin-bottom:10px;">
+      <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:3px;">Grup Adı</label>
+      <input id="yg-ad" placeholder="Örn: 10. Sınıf 2026-2027" style="border:1.5px solid #cbd5e1;border-radius:7px;padding:7px 10px;font-size:13px;width:100%;"/>
+    </div>
+    <div style="margin-bottom:10px;">
+      <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:3px;">Öğrenci Listesi</label>
+      <div style="font-size:11px;color:#94a3b8;margin-bottom:4px;">Format: <code>No | Ad | Soyad | Şube</code> — her satıra bir öğrenci</div>
+      <textarea id="yg-liste" rows="10" style="border:1.5px solid #cbd5e1;border-radius:7px;padding:7px 10px;font-size:12px;font-family:monospace;width:100%;resize:vertical;" placeholder="582 | KADİR UMUT | YAPICI | 10-A&#10;714 | ATİLLA | ÖZLÜ | 10-A&#10;709 | ALPEREN | BAYSAL | 10-B"></textarea>
+      <div id="yg-onizleme" style="font-size:12px;color:#64748b;margin-top:4px;"></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn bg bsm" onclick="document.getElementById('yg-ov').style.display='none'">İptal</button>
+      <button class="btn bp bsm" onclick="yeniGrupKaydet()">✅ Oluştur</button>
+    </div>
+  </div>
+</div>
+
+<!-- Öğrenci Düzenle Overlay -->
+<div id="ov">
+  <div id="ovbox">
+    <h3 id="ov-baslik">Öğrenci Düzenle</h3>
+    <div id="ov-form"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;">
+      <button class="btn bg bsm" onclick="ovKapat()">İptal</button>
+      <button class="btn bp bsm" onclick="ovKaydet()">✅ Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ── VERİ YAPISI ──────────────────────────────────────────────────────────────
+// Öğrenci: {id, no, ad, soyad, sinif, donemler: {d1:{...}, d2:{...}}}
+// Dönem: {y1,y2,q1,q2,q3,odev,kat,haz,sor,tut,sur,p1,p2}
+
+var GRUPLAR = {}; // { grupId: { ad, ogrenciler, aktifDonem, aktifSinif } }
+var AKTİF_GRUP = null;
+var DATA = { ogrenciler: [], aktifDonem: 'd1', aktifSinif: '' };
+var aktifOgrId = null;
+
+// ── HESAPLAMALAR ──────────────────────────────────────────────────────────────
+function yaziOrta(d) {
+  var y1 = d.y1||0, y2 = d.y2||0;
+  if (d.y1===null&&d.y2===null) return null;
+  if (d.y1===null) return y2;
+  if (d.y2===null) return y1;
+  return (y1+y2)/2;
+}
+function quizOrta(d) {
+  var vals = [d.q1,d.q2,d.q3].filter(function(v){return v!==null&&v!==undefined;});
+  if (!vals.length) return null;
+  return Math.max.apply(null,vals);
+}
+function performans(d) {
+  var yo = yaziOrta(d), qo = quizOrta(d), ov = d.odev;
+  if (yo===null&&qo===null&&ov===null) return null;
+  return (yo||0)*0.3 + (qo||0)*0.6 + (ov||0)*0.1;
+}
+function genelDurum(d) {
+  return (d.kat||0)+(d.haz||0)+(d.sor||0)+(d.tut||0)+(d.sur||0);
+}
+function sonPerformans(d) {
+  var p = performans(d), gd = genelDurum(d);
+  if (p===null) return null;
+  return Math.min(100, p*0.8 + (gd*4)*0.2);
+}
+function genelOrtalama(d) {
+  var yo = yaziOrta(d), p1 = d.p1, p2 = d.p2;
+  var vals = [yo,p1,p2].filter(function(v){return v!==null&&v!==undefined;});
+  if (!vals.length) return null;
+  return vals.reduce(function(a,b){return a+b;},0)/vals.length;
+}
+function notHarf(p) {
+  if (p===null||p===undefined) return '—';
+  if (p>=90) return 'AA'; if (p>=80) return 'BA'; if (p>=70) return 'BB';
+  if (p>=60) return 'CB'; if (p>=50) return 'CC'; return 'FF';
+}
+function notClass(p) {
+  if (p===null||p===undefined) return '';
+  if (p>=90) return 'sc-aa'; if (p>=80) return 'sc-ba'; if (p>=70) return 'sc-bb';
+  if (p>=60) return 'sc-cb'; if (p>=50) return 'sc-cc'; return 'sc-ff';
+}
+function fmt(v, dec) {
+  if (v===null||v===undefined) return '—';
+  return (+v).toFixed(dec!==undefined?dec:1);
+}
+function ort(arr) {
+  var a = arr.filter(function(v){return v!==null&&v!==undefined;});
+  if (!a.length) return null;
+  return a.reduce(function(s,v){return s+v;},0)/a.length;
+}
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+function kaydet() {
+  if (AKTİF_GRUP) GRUPLAR[AKTİF_GRUP] = JSON.parse(JSON.stringify(DATA));
+  localStorage.setItem('nd_gruplar', JSON.stringify(GRUPLAR));
+  localStorage.setItem('nd_aktif', AKTİF_GRUP||'');
+}
+function yukle() {
+  try {
+    var g = localStorage.getItem('nd_gruplar');
+    if (g) GRUPLAR = JSON.parse(g);
+    var a = localStorage.getItem('nd_aktif');
+    if (a && GRUPLAR[a]) {
+      AKTİF_GRUP = a;
+      Object.assign(DATA, GRUPLAR[a]);
+    } else if (Object.keys(GRUPLAR).length) {
+      AKTİF_GRUP = Object.keys(GRUPLAR)[0];
+      Object.assign(DATA, GRUPLAR[AKTİF_GRUP]);
+    }
+  } catch(e) {}
+}
+
+// ── YARDIMCILAR ───────────────────────────────────────────────────────────────
+function getSiniflar() {
+  var s = {};
+  DATA.ogrenciler.forEach(function(o){ s[o.sinif]=1; });
+  return Object.keys(s).sort();
+}
+function getSinifOgr(sinif, donem) {
+  return DATA.ogrenciler.filter(function(o){
+    return (!sinif||o.sinif===sinif);
+  });
+}
+function goTab(name, btn) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('#tabs button').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('pg-'+name).classList.add('active');
+  btn.classList.add('active');
+  renderPage(name);
+}
+function renderAll() {
+  var active = document.querySelector('#tabs button.active');
+  var name = active ? active.getAttribute('onclick').match(/goTab\('(\w+)'/)[1] : 'giris';
+  renderPage(name);
+  updateHeader();
+}
+function renderPage(name) {
+  if (name==='giris') renderGiris();
+  else if (name==='ozet') renderOzet();
+  else if (name==='karsilastirma') renderKarsilastirma();
+  else if (name==='ogrenci') renderOgrenci();
+  else if (name==='ayarlar') renderAyarlar();
+}
+function updateHeader() {
+  var donemAd = DATA.aktifDonem==='d1'?'I. Dönem':'II. Dönem';
+  var g = AKTİF_GRUP && GRUPLAR[AKTİF_GRUP];
+  var grupAd = g ? g.ad : '';
+  document.getElementById('hdr-info').textContent =
+    (grupAd?grupAd+' · ':'')+DATA.ogrenciler.length + ' öğrenci · ' + donemAd;
+}
+
+// ── NOT GİRİŞİ ────────────────────────────────────────────────────────────────
+function renderGiris() {
+  var siniflar = getSiniflar();
+  if (!DATA.aktifSinif || siniflar.indexOf(DATA.aktifSinif)===-1) DATA.aktifSinif = siniflar[0]||'';
+
+  var h = '<div class="card"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">';
+  h += '<div class="ctitle" style="margin:0;">📝 Not Girişi</div>';
+  h += '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">';
+  // Dönem seçici
+  h += '<div style="display:flex;gap:4px;">';
+  ['d1','d2'].forEach(function(d){
+    var lbl = d==='d1'?'I. Dönem':'II. Dönem';
+    var act = DATA.aktifDonem===d;
+    h += '<button class="btn bsm '+(act?'bp':'bg')+'" onclick="setDonem(\''+d+'\')">'+(act?'● ':'')+lbl+'</button>';
+  });
+  h += '</div>';
+  h += '<button class="btn bam2 bsm" onclick="window.print()">🖨️ Yazdır</button>';
+  h += '</div></div>';
+
+  // Şube tabları
+  h += '<div class="stabs">';
+  siniflar.forEach(function(s){
+    h += '<button class="stab'+(s===DATA.aktifSinif?' active':'')+'" onclick="setSinif(\''+s+'\')">' + s + '</button>';
+  });
+  h += '</div></div>';
+
+  // Tablo
+  var ogr = DATA.ogrenciler.filter(function(o){return o.sinif===DATA.aktifSinif;});
+  var donem = DATA.aktifDonem;
+
+  h += '<div class="card"><div style="overflow-x:auto;"><table>';
+  h += '<thead><tr>';
+  h += '<th class="left" style="min-width:140px;">Ad Soyad</th>';
+  h += '<th>No</th>';
+  // Yazılılar
+  h += '<th colspan="3" style="background:#1a3650;border-bottom:2px solid var(--a);">📝 YAZILI</th>';
+  // Quizler
+  h += '<th colspan="4" style="background:#1a3650;border-bottom:2px solid var(--t);">⚡ QUİZ</th>';
+  // Ödev + Performans
+  h += '<th style="background:#1a3650;border-bottom:2px solid var(--am);">📚</th>';
+  h += '<th colspan="5" style="background:#1a3650;border-bottom:2px solid var(--vi);">👤 GENEL DURUM</th>';
+  // Sonuçlar
+  h += '<th colspan="5" style="background:#0d4f3f;border-bottom:2px solid var(--gr);">📊 SONUÇLAR</th>';
+  h += '</tr><tr>';
+  h += '<th class="left">Ad Soyad</th><th>No</th>';
+  h += '<th>Yz-1</th><th>Yz-2</th><th>YzOrt</th>';
+  h += '<th>Qz-1</th><th>Qz-2</th><th>Qz-3</th><th>QzMax</th>';
+  h += '<th>Ödev</th>';
+  h += '<th title="Derse Katılım">Kat</th><th title="Derse Hazırlık">Haz</th><th title="Sorumluluk">Sor</th><th title="Tutum Davranış">Tut</th><th title="Süreklilik">Sür</th>';
+  h += '<th title="Son Performans">S.Perf</th><th>P1</th><th>P2</th><th>G.Ort</th><th>Harf</th>';
+  h += '</tr></thead><tbody>';
+
+  ogr.forEach(function(o, i) {
+    var d = (o.donemler && o.donemler[donem]) || emptyDonem();
+    var yo = yaziOrta(d), qo = quizOrta(d), sp = sonPerformans(d), go = genelOrtalama(d);
+    var bg = i%2===0?'#fff':'#f8fafc';
+    h += '<tr style="background:'+bg+'">';
+    h += '<td class="left" style="cursor:pointer;" onclick="ogrDuzenle(\''+o.id+'\')">'+esc(o.ad)+' '+esc(o.soyad)+'</td>';
+    h += '<td>'+esc(o.no)+'</td>';
+    // Yazılılar
+    h += '<td>'+ninput(o.id,donem,'y1',d.y1,100)+'</td>';
+    h += '<td>'+ninput(o.id,donem,'y2',d.y2,100)+'</td>';
+    h += '<td style="font-weight:700;color:var(--a);">'+fmt(yo)+'</td>';
+    // Quizler
+    h += '<td>'+ninput(o.id,donem,'q1',d.q1,100)+'</td>';
+    h += '<td>'+ninput(o.id,donem,'q2',d.q2,100)+'</td>';
+    h += '<td>'+ninput(o.id,donem,'q3',d.q3,100)+'</td>';
+    h += '<td style="font-weight:700;color:var(--t);">'+fmt(qo,0)+'</td>';
+    // Ödev
+    h += '<td>'+ninput(o.id,donem,'odev',d.odev,100)+'</td>';
+    // Genel durum (1-5)
+    ['kat','haz','sor','tut','sur'].forEach(function(k){
+      h += '<td>'+ninput(o.id,donem,k,d[k],5,1)+'</td>';
+    });
+    // Sonuçlar
+    h += '<td style="font-weight:700;color:var(--vi);">'+fmt(sp)+'</td>';
+    h += '<td>'+ninput(o.id,donem,'p1',d.p1,100)+'</td>';
+    h += '<td>'+ninput(o.id,donem,'p2',d.p2,100)+'</td>';
+    h += '<td class="'+notClass(go)+'" style="font-size:13px;">'+fmt(go)+'</td>';
+    h += '<td><span class="bdg '+(go>=60?'bgr':'bro')+'">'+notHarf(go)+'</span></td>';
+    h += '</tr>';
+  });
+
+  h += '</tbody></table></div></div>';
+  document.getElementById('pg-giris').innerHTML = h;
+}
+
+function ninput(ogrId, donem, key, val, max, step) {
+  var v = val!==null&&val!==undefined ? val : '';
+  var cls = v!=='' ? (v>=max*0.85?'ok':'') : '';
+  return '<input type="number" min="0" max="'+max+'" step="'+(step||1)+'" value="'+v+'" class="'+cls+'" '
+    +'style="width:'+(max<=5?'42px':'58px')+';" '
+    +'onchange="setNot(\''+ogrId+'\',\''+donem+'\',\''+key+'\',this)" '
+    +'onblur="this.value=this.value===\'\'?\'\':Math.min('+max+',Math.max(0,+this.value));setNot(\''+ogrId+'\',\''+donem+'\',\''+key+'\',this)"/>';
+}
+
+function emptyDonem() {
+  return {y1:null,y2:null,q1:null,q2:null,q3:null,odev:null,
+          kat:null,haz:null,sor:null,tut:null,sur:null,p1:null,p2:null};
+}
+
+function setDonem(d) {
+  DATA.aktifDonem = d; kaydet(); renderGiris();
+}
+function setSinif(s) {
+  DATA.aktifSinif = s; kaydet();
+  document.querySelectorAll('#pg-giris .stab').forEach(function(b){
+    b.classList.toggle('active', b.textContent===s);
+  });
+  renderGiris();
+}
+
+function setNot(ogrId, donem, key, input) {
+  var o = DATA.ogrenciler.find(function(x){return x.id===ogrId;});
+  if (!o) return;
+  if (!o.donemler) o.donemler = {};
+  if (!o.donemler[donem]) o.donemler[donem] = emptyDonem();
+  var v = input.value===''?null:parseFloat(input.value);
+  o.donemler[donem][key] = v;
+  kaydet();
+  // Hesaplanan sütunları güncelle
+  var d = o.donemler[donem];
+  var row = input.closest('tr');
+  if (!row) return;
+  var cells = row.querySelectorAll('td');
+  // YzOrt = index 4, QzMax = 8, S.Perf = 15, G.Ort = 18
+  cells[4].textContent = fmt(yaziOrta(d));
+  cells[8].textContent = fmt(quizOrta(d),0);
+  cells[15].textContent = fmt(sonPerformans(d));
+  cells[18].className = notClass(genelOrtalama(d));
+  cells[18].style.fontSize = '13px';
+  cells[18].textContent = fmt(genelOrtalama(d));
+  cells[19].innerHTML = '<span class="bdg '+(genelOrtalama(d)>=60?'bgr':'bro')+'">'+notHarf(genelOrtalama(d))+'</span>';
+}
+
+// ── ÖZET ──────────────────────────────────────────────────────────────────────
+function renderOzet() {
+  var donem = DATA.aktifDonem;
+  var siniflar = getSiniflar();
+  var tumOgr = DATA.ogrenciler;
+  var golar = tumOgr.map(function(o){
+    var d = o.donemler&&o.donemler[donem]; return d?genelOrtalama(d):null;
+  }).filter(function(v){return v!==null;});
+
+  var h = '<div class="card"><div class="ctitle">📊 Genel Özet — '+(donem==='d1'?'I. Dönem':'II. Dönem')+'</div>';
+  h += '<div class="sgrid sg4">';
+  var mean = ort(golar)||0;
+  var std = golar.length ? Math.sqrt(golar.reduce(function(s,v){return s+(v-mean)*(v-mean);},0)/golar.length) : 0;
+  var gec = golar.filter(function(v){return v>=50;}).length;
+  [
+    ['Değerlendirilen',golar.length,'var(--p)'],
+    ['Genel Ortalama',mean.toFixed(1),'var(--a)'],
+    ['Std. Sapma',std.toFixed(1),'var(--vi)'],
+    ['Geçen (≥50)','%'+Math.round(gec/golar.length*100)||0,'var(--t)']
+  ].forEach(function(x){
+    h += '<div class="scard" style="border-top:3px solid '+x[2]+';"><div class="slbl">'+x[0]+'</div><div class="sval" style="color:'+x[2]+';">'+x[1]+'</div></div>';
+  });
+  h += '</div>';
+
+  // Şube tablosu
+  h += '<div class="card"><div class="ctitle">🏫 Şube Özeti</div><div style="overflow-x:auto;"><table>';
+  h += '<thead><tr><th class="left">Şube</th><th>Öğrenci</th><th>Ort.</th><th>Std.Sap</th><th>En Yük.</th><th>En Düş.</th><th>Geçen</th><th>Başarı%</th></tr></thead><tbody>';
+  siniflar.forEach(function(s,i){
+    var ogr = tumOgr.filter(function(o){return o.sinif===s;});
+    var vals = ogr.map(function(o){
+      var d=o.donemler&&o.donemler[donem]; return d?genelOrtalama(d):null;
+    }).filter(function(v){return v!==null;});
+    if (!vals.length) { h+='<tr><td class="left" style="font-weight:700;">'+s+'</td><td colspan="7" style="color:var(--g);font-size:12px;">Not girilmemiş</td></tr>'; return; }
+    var sm=ort(vals)||0, ss=Math.sqrt(vals.reduce(function(x,v){return x+(v-sm)*(v-sm);},0)/vals.length);
+    var gec2=vals.filter(function(v){return v>=50;}).length;
+    h += '<tr style="background:'+(i%2===0?'#fff':'#f8fafc')+'">';
+    h += '<td class="left" style="font-weight:700;">'+s+'</td><td>'+vals.length+'</td>';
+    h += '<td style="font-weight:700;color:'+(sm>=60?'var(--gr)':'var(--ro)')+';">'+sm.toFixed(1)+'</td>';
+    h += '<td>'+ss.toFixed(1)+'</td>';
+    h += '<td>'+Math.max.apply(null,vals).toFixed(1)+'</td>';
+    h += '<td>'+Math.min.apply(null,vals).toFixed(1)+'</td>';
+    h += '<td>'+gec2+'</td>';
+    h += '<td><span class="bdg '+(gec2/vals.length>=0.6?'bgr':'bro')+'">%'+Math.round(gec2/vals.length*100)+'</span></td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table></div></div>';
+
+  // Not dağılımı
+  var dag = [['AA',90,100],['BA',80,89],['BB',70,79],['CB',60,69],['CC',50,59],['FF',0,49]].map(function(x){
+    return {harf:x[0], n:golar.filter(function(v){return v>=x[1]&&v<=x[2];}).length};
+  });
+  h += '<div class="card"><div class="ctitle">📊 Not Dağılımı</div>';
+  h += '<div style="display:flex;gap:10px;flex-wrap:wrap;">';
+  dag.forEach(function(x){
+    var pct = golar.length?Math.round(x.n/golar.length*100):0;
+    var col = x.harf==='FF'?'#f43f5e':x.harf==='CC'||x.harf==='CB'?'#f59e0b':'#16a34a';
+    h += '<div class="scard" style="border-top:3px solid '+col+';min-width:80px;flex:1;">';
+    h += '<div class="slbl">'+x.harf+'</div>';
+    h += '<div class="sval" style="color:'+col+';">'+x.n+'</div>';
+    h += '<div style="font-size:11px;color:var(--g);">%'+pct+'</div>';
+    h += '</div>';
+  });
+  h += '</div></div>';
+
+  // Sıralama
+  var sorted = tumOgr.map(function(o){
+    var d=o.donemler&&o.donemler[donem]; var go=d?genelOrtalama(d):null;
+    return{o:o,go:go};
+  }).filter(function(x){return x.go!==null;}).sort(function(a,b){return b.go-a.go;});
+
+  h += '<div class="card"><div class="ctitle">🏆 Genel Sıralama</div><div style="overflow-x:auto;"><table>';
+  h += '<thead><tr><th>#</th><th>No</th><th class="left">Ad Soyad</th><th>Şube</th><th>YzOrt</th><th>QzMax</th><th>S.Perf</th><th>G.Ort</th><th>Harf</th></tr></thead><tbody>';
+  sorted.forEach(function(x,i){
+    var o=x.o, d=o.donemler[donem];
+    h += '<tr style="background:'+(i%2===0?'#fff':'#f8fafc')+'">';
+    h += '<td style="color:var(--g);font-weight:700;">'+(i+1)+'</td>';
+    h += '<td>'+esc(o.no)+'</td>';
+    h += '<td class="left">'+esc(o.ad)+' '+esc(o.soyad)+'</td>';
+    h += '<td>'+esc(o.sinif)+'</td>';
+    h += '<td>'+fmt(yaziOrta(d))+'</td>';
+    h += '<td>'+fmt(quizOrta(d),0)+'</td>';
+    h += '<td>'+fmt(sonPerformans(d))+'</td>';
+    h += '<td class="'+notClass(x.go)+'" style="font-weight:800;font-size:13px;">'+fmt(x.go)+'</td>';
+    h += '<td><span class="bdg '+(x.go>=60?'bgr':'bro')+'">'+notHarf(x.go)+'</span></td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table></div></div>';
+  document.getElementById('pg-ozet').innerHTML = h;
+}
+
+// ── KARŞILAŞTIRMA ──────────────────────────────────────────────────────────────
+function renderKarsilastirma() {
+  var siniflar = getSiniflar();
+  var donemler = [{id:'d1',ad:'I. Dönem'},{id:'d2',ad:'II. Dönem'}];
+
+  var h = '<div class="card"><div class="ctitle">⚖️ Dönem × Şube Karşılaştırması</div>';
+  h += '<div style="overflow-x:auto;"><table><thead><tr><th class="left">Şube</th>';
+  donemler.forEach(function(d){ h+='<th colspan="3" style="background:#1a3650;">'+d.ad+'</th>'; });
+  h += '</tr><tr><th class="left">—</th>';
+  donemler.forEach(function(){
+    h += '<th>Ort.</th><th>En Yük.</th><th>Başarı%</th>';
+  });
+  h += '</tr></thead><tbody>';
+  siniflar.forEach(function(s,i){
+    h += '<tr style="background:'+(i%2===0?'#fff':'#f8fafc')+'">';
+    h += '<td class="left" style="font-weight:700;">'+s+'</td>';
+    donemler.forEach(function(d){
+      var vals = DATA.ogrenciler.filter(function(o){return o.sinif===s;}).map(function(o){
+        var dn=o.donemler&&o.donemler[d.id]; return dn?genelOrtalama(dn):null;
+      }).filter(function(v){return v!==null;});
+      if (!vals.length) { h+='<td colspan="3" style="color:var(--g);">—</td>'; return; }
+      var sm=ort(vals)||0, maks=Math.max.apply(null,vals), gec=vals.filter(function(v){return v>=50;}).length;
+      h += '<td style="font-weight:700;color:'+(sm>=60?'var(--gr)':'var(--ro)')+';">'+sm.toFixed(1)+'</td>';
+      h += '<td>'+maks.toFixed(1)+'</td>';
+      h += '<td><span class="bdg '+(gec/vals.length>=0.6?'bgr':'bro')+'">%'+Math.round(gec/vals.length*100)+'</span></td>';
+    });
+    h += '</tr>';
+  });
+  h += '</tbody></table></div></div>';
+
+  // Bileşen karşılaştırması (yazılı, quiz, ödev ortalama)
+  h += '<div class="card"><div class="ctitle">📊 Bileşen Karşılaştırması — '+( DATA.aktifDonem==='d1'?'I. Dönem':'II. Dönem')+'</div>';
+  h += '<div style="overflow-x:auto;"><table><thead><tr>';
+  h += '<th class="left">Şube</th><th>Yazılı Ort.</th><th>Quiz Maks Ort.</th><th>Ödev Ort.</th><th>Son Perf. Ort.</th><th>Genel Ort.</th></tr></thead><tbody>';
+  siniflar.forEach(function(s,i){
+    var ogr = DATA.ogrenciler.filter(function(o){return o.sinif===s;});
+    var donem = DATA.aktifDonem;
+    var getVals = function(fn){
+      return ogr.map(function(o){var d=o.donemler&&o.donemler[donem]; return d?fn(d):null;}).filter(function(v){return v!==null;});
+    };
+    var yv=getVals(yaziOrta),qv=getVals(quizOrta),ov=getVals(function(d){return d.odev;}),
+        spv=getVals(sonPerformans),gov=getVals(genelOrtalama);
+    h += '<tr style="background:'+(i%2===0?'#fff':'#f8fafc')+'">';
+    h += '<td class="left" style="font-weight:700;">'+s+'</td>';
+    [yv,qv,ov,spv,gov].forEach(function(vals,ci){
+      var m=ort(vals);
+      h += '<td style="font-weight:'+(ci===4?'800':'400')+';color:'+(ci===4?(m&&m>=60?'var(--gr)':'var(--ro)'):'inherit')+';'+'">'+fmt(m)+'</td>';
+    });
+    h += '</tr>';
+  });
+  h += '</tbody></table></div></div>';
+
+  document.getElementById('pg-karsilastirma').innerHTML = h;
+}
+
+// ── ÖĞRENCİ KARTI ──────────────────────────────────────────────────────────────
+function renderOgrenci() {
+  var siniflar = getSiniflar();
+  var h = '<div class="card"><div class="ctitle">👤 Öğrenci Kartı</div>';
+  h += '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">';
+  h += '<select id="ok-sinif" onchange="okSinifDegis()" style="width:100px;text-align:left;">';
+  h += '<option value="">Tüm Şubeler</option>';
+  siniflar.forEach(function(s){h+='<option>'+s+'</option>';});
+  h += '</select>';
+  h += '<select id="ok-ogr" style="flex:1;max-width:320px;text-align:left;" onchange="okGoster()">';
+  h += '<option value="">— Öğrenci seçin —</option>';
+  DATA.ogrenciler.slice().sort(function(a,b){return (a.sinif+a.soyad).localeCompare(b.sinif+b.soyad,'tr');}).forEach(function(o){
+    h += '<option value="'+o.id+'">'+esc(o.no)+' — '+esc(o.ad)+' '+esc(o.soyad)+' ('+esc(o.sinif)+')</option>';
+  });
+  h += '</select>';
+  h += '<button class="btn bt bsm" onclick="window.print()">🖨️ Yazdır</button>';
+  h += '</div></div>';
+  h += '<div id="ok-icerik"><div style="text-align:center;padding:40px;color:var(--g);">Yukarıdan bir öğrenci seçin.</div></div>';
+  document.getElementById('pg-ogrenci').innerHTML = h;
+  if (aktifOgrId) {
+    document.getElementById('ok-ogr').value = aktifOgrId;
+    okGoster();
+  }
+}
+
+function okSinifDegis(){
+  var sinif = document.getElementById('ok-sinif').value;
+  var sel = document.getElementById('ok-ogr');
+  sel.innerHTML = '<option value="">— Öğrenci seçin —</option>';
+  DATA.ogrenciler.filter(function(o){return !sinif||o.sinif===sinif;})
+    .sort(function(a,b){return a.soyad.localeCompare(b.soyad,'tr');})
+    .forEach(function(o){
+      sel.innerHTML += '<option value="'+o.id+'">'+esc(o.no)+' — '+esc(o.ad)+' '+esc(o.soyad)+'</option>';
+    });
+}
+
+function okGoster(){
+  var id = document.getElementById('ok-ogr').value;
+  aktifOgrId = id;
+  var cont = document.getElementById('ok-icerik');
+  if (!id) { cont.innerHTML='<div style="text-align:center;padding:40px;color:var(--g);">Öğrenci seçin.</div>'; return; }
+  var o = DATA.ogrenciler.find(function(x){return x.id===id;});
+  if (!o) return;
+
+  var h = '<div style="background:linear-gradient(135deg,var(--p),var(--t));color:#fff;border-radius:12px;padding:18px;margin-bottom:12px;">';
+  h += '<div style="font-size:20px;font-weight:800;">'+esc(o.ad)+' '+esc(o.soyad)+'</div>';
+  h += '<div style="font-size:13px;opacity:.8;margin-top:4px;">No: '+esc(o.no)+' · Şube: '+esc(o.sinif)+'</div></div>';
+
+  // Her iki dönem
+  var donemler = [{id:'d1',ad:'I. Dönem'},{id:'d2',ad:'II. Dönem'}];
+  h += '<div class="sgrid sg3">';
+  donemler.forEach(function(dn){
+    var d = o.donemler&&o.donemler[dn.id];
+    var go = d?genelOrtalama(d):null;
+    h += '<div class="scard" style="border-top:3px solid '+(go&&go>=60?'var(--gr)':'var(--am)')+';">';
+    h += '<div class="slbl">'+dn.ad+' Genel Ort.</div>';
+    h += '<div class="sval '+notClass(go)+'">'+fmt(go)+'</div>';
+    h += '<div style="font-size:12px;color:var(--g);">'+notHarf(go)+'</div>';
+    h += '</div>';
+  });
+  // Genel yıl ortalaması
+  var yilVals = donemler.map(function(dn){var d=o.donemler&&o.donemler[dn.id]; return d?genelOrtalama(d):null;}).filter(function(v){return v!==null;});
+  var yilOrt = ort(yilVals);
+  h += '<div class="scard" style="border-top:3px solid var(--p);">';
+  h += '<div class="slbl">Yıl Ortalaması</div>';
+  h += '<div class="sval '+notClass(yilOrt)+'">'+fmt(yilOrt)+'</div>';
+  h += '<div style="font-size:12px;color:var(--g);">'+notHarf(yilOrt)+'</div>';
+  h += '</div></div>';
+
+  // Detay tablo
+  donemler.forEach(function(dn){
+    var d = o.donemler&&o.donemler[dn.id];
+    if (!d) return;
+    var yo=yaziOrta(d),qo=quizOrta(d),p=performans(d),gd=genelDurum(d),sp=sonPerformans(d),go=genelOrtalama(d);
+    h += '<div class="card"><div class="ctitle">'+dn.ad+' Detayı</div>';
+    h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-bottom:10px;">';
+    [
+      ['Yazılı-1',d.y1],['Yazılı-2',d.y2],['Yz.Ort.',yo],
+      ['Quiz Max',qo],['Ödev',d.odev],['Performans',p],
+      ['Genel Durum',gd+'/25'],['Son Perf.',sp],['Genel Ort.',go]
+    ].forEach(function(x){
+      h += '<div class="scard"><div class="slbl">'+x[0]+'</div>';
+      h += '<div style="font-size:18px;font-weight:800;color:var(--p);">'+fmt(typeof x[1]==='string'?parseFloat(x[1]):x[1])+'</div></div>';
+    });
+    h += '</div>';
+    // Genel durum detayı
+    h += '<div style="display:flex;gap:6px;flex-wrap:wrap;font-size:12px;">';
+    [['Katılım',d.kat],['Hazırlık',d.haz],['Sorumluluk',d.sor],['Tutum',d.tut],['Süreklilik',d.sur]].forEach(function(x){
+      h += '<span style="background:#f1f5f9;padding:3px 10px;border-radius:6px;">'+x[0]+': <b>'+fmt(x[1],0)+'</b>/5</span>';
+    });
+    h += '</div>';
+    // Performans notları
+    h += '<div style="margin-top:10px;font-size:12px;color:var(--g);">Performans Notları: <b style="color:var(--p);">P1: '+fmt(d.p1)+'</b> &nbsp; <b style="color:var(--p);">P2: '+fmt(d.p2)+'</b></div>';
+    h += '</div>';
+  });
+
+  // Sınıf karşılaştırması (aktif dönem)
+  var donem = DATA.aktifDonem;
+  var sinifOgr = DATA.ogrenciler.filter(function(x){return x.sinif===o.sinif;});
+  var sinifVals = sinifOgr.map(function(x){var d=x.donemler&&x.donemler[donem]; return d?genelOrtalama(d):null;}).filter(function(v){return v!==null;});
+  var ogrGo = o.donemler&&o.donemler[donem]?genelOrtalama(o.donemler[donem]):null;
+  if (ogrGo!==null&&sinifVals.length) {
+    var sinifOrt = ort(sinifVals)||0;
+    var siralama = sinifVals.filter(function(v){return v>ogrGo;}).length+1;
+    var pct = Math.round((1-(siralama-1)/sinifVals.length)*100);
+    h += '<div class="card"><div class="ctitle">📈 Sınıf Karşılaştırması ('+(donem==='d1'?'I. Dönem':'II. Dönem')+')</div>';
+    h += '<div class="sgrid sg3">';
+    [{l:'Öğrenci',v:ogrGo.toFixed(1),c:'var(--p)'},{l:o.sinif+' Ort.',v:sinifOrt.toFixed(1),c:'var(--a)'},{l:'Sıralama',v:siralama+'. / %'+pct,c:'var(--t)'}].forEach(function(x){
+      h += '<div class="scard"><div class="slbl">'+x.l+'</div><div style="font-size:18px;font-weight:800;color:'+x.c+';">'+x.v+'</div></div>';
+    });
+    h += '</div></div>';
+  }
+
+  cont.innerHTML = h;
+}
+
+// ── AYARLAR ────────────────────────────────────────────────────────────────────
+function renderAyarlar(){
+  var ob = JSON.parse(localStorage.getItem('nd_okul')||'{}');
+  var h = '<div class="card"><div class="ctitle">🏫 Okul Bilgileri</div>';
+  h += '<div class="row2">';
+  h += '<div><label>Okul Adı</label><input id="ob-okul" value="'+esc(ob.okul||'')+'" placeholder="İstanbul Atatürk Fen Lisesi"/></div>';
+  h += '<div><label>Öğretmen</label><input id="ob-ogr" value="'+esc(ob.ogretmen||'')+'" placeholder="Sezgin Erol"/></div>';
+  h += '<div><label>Ders</label><input id="ob-ders" value="'+esc(ob.ders||'')+'" placeholder="Biyoloji"/></div>';
+  h += '<div><label>Sınıf</label><input id="ob-sinif" value="'+esc(ob.sinifGrubu||'')+'" placeholder="10. Sınıf"/></div>';
+  h += '</div>';
+  h += '<button class="btn bt" onclick="ayarlarKaydet()">💾 Kaydet</button></div>';
+  h += '<div class="card" style="border-left:4px solid var(--ro);"><div class="ctitle" style="color:var(--ro);">🗑 Sıfırla</div>';
+  h += '<button class="btn br" onclick="tumSifirla()">Tüm Verileri Sil</button></div>';
+  document.getElementById('pg-ayarlar').innerHTML = h;
+}
+
+function ayarlarKaydet(){
+  var ob={okul:document.getElementById('ob-okul').value.trim(),
+          ogretmen:document.getElementById('ob-ogr').value.trim(),
+          ders:document.getElementById('ob-ders').value.trim(),
+          sinifGrubu:document.getElementById('ob-sinif').value.trim()};
+  localStorage.setItem('nd_okul',JSON.stringify(ob));
+  alert('Kaydedildi!');
+}
+function tumSifirla(){
+  if(!confirm('Tüm veriler silinecek. Emin misiniz?')) return;
+  localStorage.removeItem('nd_data'); location.reload();
+}
+
+// ── YEDEK ──────────────────────────────────────────────────────────────────────
+function yedekAl() {
+  try {
+    kaydet(); var veri = { nd_gruplar: localStorage.getItem('nd_gruplar'), nd_aktif: localStorage.getItem('nd_aktif'), nd_okul: localStorage.getItem('nd_okul') };
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', window.location.href, false);
+    xhr.send();
+    var html = xhr.responseText;
+    html = html.replace(/\/\/ __ND_AUTOLOAD_START__[\s\S]*?\/\/ __ND_AUTOLOAD_END__/g, '');
+    var autoload = '';
+    html = html.replace("'use strict';", "'use strict';\n"+autoload);
+    var tarih = new Date().toLocaleDateString('tr-TR').replace(/\./g,'-');
+    var blob = new Blob([html],{type:'text/html'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href=url; a.download='not_defteri_'+tarih+'.html'; a.click();
+    URL.revokeObjectURL(url);
+  } catch(e) {
+    var fallback = {versiyon:1,veri:{nd_data:localStorage.getItem('nd_data'),nd_okul:localStorage.getItem('nd_okul')}};
+    var b2 = new Blob([JSON.stringify(fallback,null,2)],{type:'application/json'});
+    var u2 = URL.createObjectURL(b2);
+    var a2 = document.createElement('a');
+    a2.href=u2; a2.download='not_defteri_yedek.json'; a2.click();
+    URL.revokeObjectURL(u2);
+  }
+}
+
+function yedekYukle(input){
+  var file=input.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var text=e.target.result;
+      if(file.name.endsWith('.json')){
+        var y=JSON.parse(text);
+        var veri=y.veri||y;
+        Object.keys(veri).forEach(function(k){ if(veri[k]!==null&&veri[k]!==undefined) localStorage.setItem(k,veri[k]); });
+      } else {
+        // HTML dosyası — localStorage anahtarlarını içindeki JSON'dan çek
+        var m=text.match(/var v=(\{[^;]+\});/);
+        if(m){ var veri=JSON.parse(m[1]); Object.keys(veri).forEach(function(k){if(veri[k])localStorage.setItem(k,veri[k]);}); }
+        else { alert('Geçerli yedek bulunamadı.'); return; }
+      }
+      alert('Yüklendi!');
+      location.reload();
+    } catch(err){ alert('Hata: '+err.message); }
+  };
+  reader.readAsText(file);
+  input.value='';
+}
+
+// ── OVERLAY (Öğrenci Düzenle) ─────────────────────────────────────────────────
+function ogrDuzenle(id){
+  var o=DATA.ogrenciler.find(function(x){return x.id===id;}); if(!o) return;
+  document.getElementById('ov-baslik').textContent=o.ad+' '+o.soyad+' düzenle';
+  document.getElementById('ov-form').innerHTML=
+    '<div class="row2">'+
+    '<div><label>Ad</label><input id="ov-ad" value="'+esc(o.ad)+'"/></div>'+
+    '<div><label>Soyad</label><input id="ov-soyad" value="'+esc(o.soyad)+'"/></div>'+
+    '<div><label>No</label><input id="ov-no" value="'+esc(o.no)+'"/></div>'+
+    '<div><label>Şube</label><input id="ov-sinif" value="'+esc(o.sinif)+'"/></div>'+
+    '</div>';
+  document.getElementById('ov').classList.add('show');
+  document.getElementById('ov').dataset.id=id;
+}
+function ovKapat(){ document.getElementById('ov').classList.remove('show'); }
+function ovKaydet(){
+  var id=document.getElementById('ov').dataset.id;
+  var o=DATA.ogrenciler.find(function(x){return x.id===id;}); if(!o) return;
+  o.ad=document.getElementById('ov-ad').value.trim();
+  o.soyad=document.getElementById('ov-soyad').value.trim();
+  o.no=document.getElementById('ov-no').value.trim();
+  o.sinif=document.getElementById('ov-sinif').value.trim();
+  kaydet(); ovKapat(); renderAll();
+}
+
+// ── BAŞLATMA ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function(){
+  yukle();
+  // İlk kez açılıyorsa varsayılan grubu yükle
+  if (!Object.keys(GRUPLAR).length) {
+    var varsayilanOgr = VARSAYILAN_DATA.map(function(o){
+      var yeni = Object.assign({}, o);
+      if (yeni.d1_import) {
+        if (!yeni.donemler) yeni.donemler = {};
+        yeni.donemler.d1 = yeni.d1_import;
+        delete yeni.d1_import;
+      }
+      return yeni;
+    });
+    var gid = 'g_' + Date.now();
+    GRUPLAR[gid] = { ad:'10. Sınıf 2025-2026', ogrenciler: varsayilanOgr, aktifDonem:'d1', aktifSinif:'' };
+    AKTİF_GRUP = gid;
+    Object.assign(DATA, GRUPLAR[gid]);
+    kaydet();
+  }
+  if (!DATA.aktifSinif) {
+    var sf = getSiniflar();
+    DATA.aktifSinif = sf[0]||'';
+  }
+  renderGrupBar();
+  renderAll();
+});
+
+
+</script>
+<script>
+// ── VARSAYILAN VERİ (I. Dönem) ────────────────────────────────────────────────
+var VARSAYILAN_DATA = [{"id": "o_795", "no": "795", "ad": "EMİRHAN", "soyad": "AÇIKGÖZ", "sinif": "10-A", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 95.0, "y2": 100.0, "q1": 56.0, "q2": 90.0, "q3": 100.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 100}}, {"id": "o_896", "no": "896", "ad": "İREM", "soyad": "BALTA", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 87.0, "y2": 96.0, "q1": 69.0, "q2": 80.0, "q3": 91.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 96.5, "p2": 100.0}, "d2_import": {"y1": 100}}, {"id": "o_788", "no": "788", "ad": "EGE TOPRAK", "soyad": "KAPISIZ", "sinif": "10-B", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 94.0, "y2": 93.0, "q1": 77.0, "q2": 55.0, "q3": 87.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 98.5, "p2": 100.0}, "d2_import": {"y1": 100}}, {"id": "o_840", "no": "840", "ad": "GÜLSU", "soyad": "GEMİCİ", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 98.0, "y2": 95.0, "q1": 86.0, "q2": 85.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 100}}, {"id": "o_853", "no": "853", "ad": "MÜNİFE BERRA", "soyad": "TALAS", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 94.0, "y2": 100.0, "q1": 99.0, "q2": 75.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 100}}, {"id": "o_787", "no": "787", "ad": "YAĞIZ EFE", "soyad": "AKGÜL", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 94.0, "y2": 93.0, "q1": 75.0, "q2": 80.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 98.5, "p2": 100.0}, "d2_import": {"y1": 100}}, {"id": "o_645", "no": "645", "ad": "BERA", "soyad": "ÜNAL", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 92.0, "y2": 93.0, "q1": 83.0, "q2": 70.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 97.5, "p2": 100.0}, "d2_import": {"y1": 100}}, {"id": "o_770", "no": "770", "ad": "FURKAN İLTEBER", "soyad": "ÇAY", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 87.0, "y2": 93.0, "q1": 84.0, "q2": 70.0, "q3": null, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 95.0, "p2": 100.0}, "d2_import": {"y1": 100}}, {"id": "o_821", "no": "821", "ad": "ARDA", "soyad": "KARADAŞ", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 87.0, "y2": 91.0, "q1": 73.0, "q2": 70.0, "q3": 100.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 97.36, "p2": 100.0}, "d2_import": {"y1": 100}}, {"id": "o_838", "no": "838", "ad": "BETÜL", "soyad": "TEZEL", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 89.0, "y2": 97.0, "q1": 79.0, "q2": 65.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 98.0, "p2": 100.0}, "d2_import": {"y1": 100}}, {"id": "o_846", "no": "846", "ad": "KARDELEN", "soyad": "ÇELİK", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 70.0, "y2": 88.0, "q1": 44.0, "q2": 45.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 94.0, "p2": 100.0}, "d2_import": {"y1": 100}}, {"id": "o_875", "no": "875", "ad": "MERT", "soyad": "PEYNİRCİ", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 78.0, "y2": 94.0, "q1": 72.0, "q2": 65.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 95.68, "p2": 100.0}, "d2_import": {"y1": 100}}, {"id": "o_887", "no": "887", "ad": "ZEYNEP", "soyad": "BENLİ", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 93.0, "y2": 100.0, "q1": 94.0, "q2": 65.0, "q3": 91.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 100}}, {"id": "o_768", "no": "768", "ad": "MELİS", "soyad": "ASLAN", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 100.0, "y2": 100.0, "q1": 96.0, "q2": 80.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 97}}, {"id": "o_820", "no": "820", "ad": "HATİCE NAZ", "soyad": "AKKUŞ", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 10, "donemler": {}, "d1_import": {"y1": 93.0, "y2": 85.0, "q1": 74.0, "q2": 70.0, "q3": 98.0, "odev": 100.0, "kat": 3.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 94.0, "p2": 100.0}, "d2_import": {"y1": 97}}, {"id": "o_881", "no": "881", "ad": "ARDA", "soyad": "BUĞU", "sinif": "10-B", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 88.0, "y2": 97.0, "q1": 68.0, "q2": 60.0, "q3": 100.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 98.2, "p2": 100.0}, "d2_import": {"y1": 97}}, {"id": "o_755", "no": "755", "ad": "ALİ KEMAL", "soyad": "YAMAN", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 87.0, "y2": 90.0, "q1": 60.0, "q2": null, "q3": 91.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 93.5, "p2": 100.0}, "d2_import": {"y1": 97}}, {"id": "o_801", "no": "801", "ad": "YAĞMUR ÇAĞLA", "soyad": "PARTI", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 98.0, "y2": 100.0, "q1": 98.0, "q2": 85.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 97}}, {"id": "o_775", "no": "775", "ad": "YAĞIZALP", "soyad": "TİMURKUTLUK", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 72.0, "y2": 75.0, "q1": 56.0, "q2": 40.0, "q3": 91.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 86.12, "p2": 90.0}, "d2_import": {"y1": 97}}, {"id": "o_842", "no": "842", "ad": "HASAN HÜSEYİN", "soyad": "ARSLAN", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 85.0, "y2": 87.0, "q1": 80.0, "q2": 60.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 94.0, "p2": 100.0}, "d2_import": {"y1": 97}}, {"id": "o_730", "no": "730", "ad": "MEHMET ESAT", "soyad": "GÜRELLİ", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 5, "donemler": {}, "d1_import": {"y1": 94.0, "y2": 92.0, "q1": 96.0, "q2": 50.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 98.0, "p2": 100.0}, "d2_import": {"y1": 96}}, {"id": "o_827", "no": "827", "ad": "MUHAMMED MELİH", "soyad": "ZORLU", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 88.0, "y2": 85.0, "q1": null, "q2": null, "q3": 66.5, "odev": 100.0, "kat": null, "haz": null, "sor": null, "tut": null, "sur": null, "p1": 91.5, "p2": 100.0}, "d2_import": {"y1": 96}}, {"id": "o_865", "no": "865", "ad": "ESMA NUR", "soyad": "ATEŞ", "sinif": "10-D", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 86.0, "y2": 95.0, "q1": 77.0, "q2": 70.0, "q3": 100.0, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 95.5, "p2": 100.0}, "d2_import": {"y1": 96}}, {"id": "o_837", "no": "837", "ad": "ECRİN", "soyad": "BAYRAKLI", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 92.0, "y2": 96.0, "q1": 98.0, "q2": 80.0, "q3": 91.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 99.0, "p2": 100.0}, "d2_import": {"y1": 95}}, {"id": "o_818", "no": "818", "ad": "ZEYNEP", "soyad": "KURU", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 86.0, "y2": 86.0, "q1": 81.0, "q2": 65.0, "q3": 100.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 96.64, "p2": 100.0}, "d2_import": {"y1": 95}}, {"id": "o_805", "no": "805", "ad": "ASENA ESLEM", "soyad": "AYKIN", "sinif": "10-D", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 91.0, "y2": 91.0, "q1": 88.0, "q2": 60.0, "q3": 91.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 96.0, "p2": 100.0}, "d2_import": {"y1": 95}}, {"id": "o_962", "no": "962", "ad": "SİMAY", "soyad": "ÖĞÜTCÜ", "sinif": "10-D", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 93.0, "y2": 96.0, "q1": 94.0, "q2": 75.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 99.5, "p2": 100.0}, "d2_import": {"y1": 95}}, {"id": "o_718", "no": "718", "ad": "MELİH", "soyad": "BALCI", "sinif": "10-A", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 73.0, "y2": 81.0, "q1": 79.0, "q2": 75.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 84.4, "p2": 95.0}, "d2_import": {"y1": 94}}, {"id": "o_760", "no": "760", "ad": "ÖMER SÜLEYMAN", "soyad": "ÇOKÇETİN", "sinif": "10-B", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 3, "donemler": {}, "d1_import": {"y1": 92.0, "y2": 81.0, "q1": 76.0, "q2": 75.0, "q3": 80.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 91.5, "p2": 100.0}, "d2_import": {"y1": 94}}, {"id": "o_799", "no": "799", "ad": "İREM", "soyad": "AYDIN", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 84.0, "y2": 88.0, "q1": 70.0, "q2": 65.0, "q3": 87.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 91.0, "p2": 100.0}, "d2_import": {"y1": 94}}, {"id": "o_886", "no": "886", "ad": "KEREM KAĞAN", "soyad": "ÇANDIR", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 90.0, "y2": 93.0, "q1": 88.0, "q2": 70.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 97.0, "p2": 100.0}, "d2_import": {"y1": 94}}, {"id": "o_883", "no": "883", "ad": "GÜLCE NAZ", "soyad": "ÇAYIR", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 88.0, "y2": 92.0, "q1": 62.0, "q2": 65.0, "q3": 91.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 95.0, "p2": 100.0}, "d2_import": {"y1": 94}}, {"id": "o_714", "no": "714", "ad": "ATİLLA", "soyad": "ÖZLÜ", "sinif": "10-A", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 94.0, "y2": 87.0, "q1": 77.0, "q2": 70.0, "q3": 100.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 97.72, "p2": 100.0}, "d2_import": {"y1": 93}}, {"id": "o_834", "no": "834", "ad": "ECRİN ASYA", "soyad": "EMEK", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 88.0, "y2": null, "q1": null, "q2": null, "q3": 0.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 93.0, "p2": 100.0}, "d2_import": {"y1": 93}}, {"id": "o_831", "no": "831", "ad": "MUHAMMED YUSUF", "soyad": "SERTKAYA", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 95.0, "y2": 85.0, "q1": 78.0, "q2": 75.0, "q3": 98.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 95.0, "p2": 100.0}, "d2_import": {"y1": 93}}, {"id": "o_841", "no": "841", "ad": "EYLÜL", "soyad": "SANCAKLI", "sinif": "10-D", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 92.0, "y2": 95.0, "q1": 82.0, "q2": 65.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 98.5, "p2": 100.0}, "d2_import": {"y1": 93}}, {"id": "o_804", "no": "804", "ad": "DEMİR ALTAN", "soyad": "AKINCI", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 85.0, "y2": null, "q1": null, "q2": null, "q3": null, "odev": 100.0, "kat": null, "haz": null, "sor": null, "tut": null, "sur": null, "p1": 90.0, "p2": 100.0}, "d2_import": {"y1": 93}}, {"id": "o_952", "no": "952", "ad": "İREM", "soyad": "ÇELİK", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 79.0, "y2": 87.0, "q1": 80.0, "q2": 60.0, "q3": 80.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 88.0, "p2": 95.0}, "d2_import": {"y1": 93}}, {"id": "o_958", "no": "958", "ad": "AYŞE MELEK", "soyad": "GÜLER", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 92.0, "y2": 90.0, "q1": 82.0, "q2": 75.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 96.88, "p2": 100.0}, "d2_import": {"y1": 93}}, {"id": "o_858", "no": "858", "ad": "AZRA RÜYA", "soyad": "METİN", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 87.0, "y2": 80.0, "q1": 74.0, "q2": 80.0, "q3": 84.0, "odev": 100.0, "kat": 4.0, "haz": 4.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 88.5, "p2": 100.0}, "d2_import": {"y1": 93}}, {"id": "o_867", "no": "867", "ad": "HÜSEYİN HAMDİ AZİZ", "soyad": "ÇEBİ", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 89.0, "y2": 81.0, "q1": 73.0, "q2": 75.0, "q3": 91.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 92.08, "p2": 100.0}, "d2_import": {"y1": 93}}, {"id": "o_885", "no": "885", "ad": "İSMET YİĞİT", "soyad": "VİRDİL", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 12, "donemler": {}, "d1_import": {"y1": 73.0, "y2": 73.0, "q1": 51.0, "q2": 60.0, "q3": null, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 78.0, "p2": 95.0}, "d2_import": {"y1": 93}}, {"id": "o_809", "no": "809", "ad": "DURU", "soyad": "DOSTAGİDEN", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 92.0, "y2": 100.0, "q1": 78.0, "q2": 85.0, "q3": 94.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 92}}, {"id": "o_752", "no": "752", "ad": "KÜBRANUR", "soyad": "KARHAN", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 69.0, "y2": 75.0, "q1": 32.0, "q2": 40.0, "q3": 91.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 85.76, "p2": 95.0}, "d2_import": {"y1": 92}}, {"id": "o_808", "no": "808", "ad": "EGE", "soyad": "ÖZBEN", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 88.0, "y2": 90.0, "q1": 98.0, "q2": 55.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 96.4, "p2": 100.0}, "d2_import": {"y1": 92}}, {"id": "o_869", "no": "869", "ad": "İREM", "soyad": "TAMGÜNEY", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 79.0, "y2": 82.0, "q1": 77.0, "q2": 70.0, "q3": 91.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 91.0, "p2": 100.0}, "d2_import": {"y1": 92}}, {"id": "o_857", "no": "857", "ad": "EREN", "soyad": "DÖKMECİ", "sinif": "10-B", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 86.0, "y2": 100.0, "q1": 99.0, "q2": 80.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 98.0, "p2": 100.0}, "d2_import": {"y1": 91}}, {"id": "o_953", "no": "953", "ad": "BERAT ARDA", "soyad": "KEKLİCEK", "sinif": "10-B", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 94.0, "y2": 78.0, "q1": 76.0, "q2": 75.0, "q3": 77.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 91.0, "p2": 95.0}, "d2_import": {"y1": 91}}, {"id": "o_964", "no": "964", "ad": "ÇAĞATAY", "soyad": "ÇİFÇİ", "sinif": "10-B", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 14, "donemler": {}, "d1_import": {"y1": 92.0, "y2": 70.0, "q1": 55.0, "q2": 50.0, "q3": 84.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 86.0, "p2": 90.0}, "d2_import": {"y1": 91}}, {"id": "o_745", "no": "745", "ad": "YAHYA", "soyad": "TEVER", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 83.0, "y2": 81.0, "q1": 55.0, "q2": 65.0, "q3": 87.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 89.68, "p2": 100.0}, "d2_import": {"y1": 91}}, {"id": "o_882", "no": "882", "ad": "RÜZGAR", "soyad": "KURT", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 86.0, "y2": 70.0, "q1": 35.0, "q2": 45.0, "q3": 73.5, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 83.0, "p2": 100.0}, "d2_import": {"y1": 91}}, {"id": "o_630", "no": "630", "ad": "AZRA", "soyad": "DURGUN", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 88.0, "y2": 100.0, "q1": 75.0, "q2": 65.0, "q3": 100.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 99.0, "p2": 100.0}, "d2_import": {"y1": 91}}, {"id": "o_864", "no": "864", "ad": "ARDA", "soyad": "KURTULUŞ", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 12, "donemler": {}, "d1_import": {"y1": 80.0, "y2": 82.0, "q1": 91.0, "q2": 60.0, "q3": null, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 86.32, "p2": 95.0}, "d2_import": {"y1": 91}}, {"id": "o_773", "no": "773", "ad": "TUNA", "soyad": "UĞURLU", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 95.0, "y2": 97.0, "q1": 94.0, "q2": 75.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 90}}, {"id": "o_969", "no": "969", "ad": "MERVE", "soyad": "TETİK", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 83.0, "y2": 88.0, "q1": 97.0, "q2": 75.0, "q3": 87.5, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 91.88, "p2": 100.0}, "d2_import": {"y1": 90}}, {"id": "o_796", "no": "796", "ad": "SEMİH", "soyad": "DEMİR", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 100.0, "y2": 85.0, "q1": 84.0, "q2": null, "q3": 91.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 97.5, "p2": 100.0}, "d2_import": {"y1": 90}}, {"id": "o_829", "no": "829", "ad": "YAREN", "soyad": "GÖKAY", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 77.0, "y2": 85.0, "q1": 89.0, "q2": null, "q3": 94.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 90.96, "p2": 100.0}, "d2_import": {"y1": 90}}, {"id": "o_810", "no": "810", "ad": "ÖZLEM", "soyad": "TAM", "sinif": "10-D", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 77.0, "y2": 85.0, "q1": 84.0, "q2": 65.0, "q3": 84.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 87.76, "p2": 100.0}, "d2_import": {"y1": 90}}, {"id": "o_878", "no": "878", "ad": "ERVA YAĞMUR", "soyad": "AKKUŞ", "sinif": "10-D", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 89.0, "y2": 82.0, "q1": 86.0, "q2": 60.0, "q3": 84.0, "odev": 100.0, "kat": 3.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 90.5, "p2": 100.0}, "d2_import": {"y1": 90}}, {"id": "o_895", "no": "895", "ad": "AYŞE SUDE", "soyad": "ATILGAN", "sinif": "10-D", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 92.0, "y2": 89.0, "q1": 67.0, "q2": 80.0, "q3": 87.5, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 95.5, "p2": 100.0}, "d2_import": {"y1": 90}}, {"id": "o_731", "no": "731", "ad": "BAHATTİN TAHA", "soyad": "ÖZEREN", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 69.0, "y2": 72.0, "q1": null, "q2": 50.0, "q3": 73.5, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 3.0, "tut": 3.0, "sur": 3.0, "p1": 75.5, "p2": 80.0}, "d2_import": {"y1": 90}}, {"id": "o_722", "no": "722", "ad": "ERAY", "soyad": "EĞRİ", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 73.0, "y2": 59.0, "q1": 42.0, "q2": 50.0, "q3": 87.5, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 81.04, "p2": 90.0}, "d2_import": {"y1": 90}}, {"id": "o_870", "no": "870", "ad": "ZEHRA NAZ", "soyad": "ÖZKAN", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 96.0, "y2": 96.0, "q1": 87.0, "q2": 70.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 89}}, {"id": "o_815", "no": "815", "ad": "MERVE", "soyad": "İLBAK", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 89.0, "y2": 72.0, "q1": 77.0, "q2": 55.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 94.36, "p2": 100.0}, "d2_import": {"y1": 89}}, {"id": "o_968", "no": "968", "ad": "DEFNE", "soyad": "MADAN", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 90.0, "y2": 93.0, "q1": 97.0, "q2": 65.0, "q3": 100.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 97.96, "p2": 100.0}, "d2_import": {"y1": 89}}, {"id": "o_751", "no": "751", "ad": "TARIK", "soyad": "OLGUN", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 83.0, "y2": 91.0, "q1": 85.0, "q2": 50.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 95.92, "p2": 100.0}, "d2_import": {"y1": 89}}, {"id": "o_823", "no": "823", "ad": "BEYZA", "soyad": "KARAERMİŞ", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 94.0, "y2": 93.0, "q1": 73.0, "q2": 65.0, "q3": null, "odev": 100.0, "kat": 4.0, "haz": 4.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 98.5, "p2": 100.0}, "d2_import": {"y1": 89}}, {"id": "o_863", "no": "863", "ad": "BEREN", "soyad": "CÜRE", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 89.0, "y2": 88.0, "q1": 82.0, "q2": 65.0, "q3": 87.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 93.5, "p2": 100.0}, "d2_import": {"y1": 89}}, {"id": "o_850", "no": "850", "ad": "ELİF MÜGE", "soyad": "SANCAKLI", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 89.0, "y2": 79.0, "q1": 76.0, "q2": 15.0, "q3": 87.5, "odev": 100.0, "kat": 3.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 89.0, "p2": 95.0}, "d2_import": {"y1": 88}}, {"id": "o_963", "no": "963", "ad": "YUSUF", "soyad": "HAKİM", "sinif": "10-A", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 85.0, "y2": 91.0, "q1": 71.0, "q2": 85.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 93.0, "p2": 100.0}, "d2_import": {"y1": 88}}, {"id": "o_780", "no": "780", "ad": "CEREN", "soyad": "UZUN", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 3, "donemler": {}, "d1_import": {"y1": 86.0, "y2": 97.0, "q1": 99.0, "q2": 75.0, "q3": 91.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 97.48, "p2": 100.0}, "d2_import": {"y1": 88}}, {"id": "o_860", "no": "860", "ad": "ECRİN", "soyad": "HALICI", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 86.0, "y2": 87.0, "q1": 66.0, "q2": 55.0, "q3": 87.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 91.5, "p2": 100.0}, "d2_import": {"y1": 88}}, {"id": "o_727", "no": "727", "ad": "AHMET MUSTAFA", "soyad": "MERT", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 86.0, "y2": 91.0, "q1": 73.0, "q2": 75.0, "q3": 100.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 97.24, "p2": 100.0}, "d2_import": {"y1": 88}}, {"id": "o_746", "no": "746", "ad": "ABDULLAH ENES", "soyad": "GÜLERLİ", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 77.0, "y2": 88.0, "q1": 98.0, "q2": 90.0, "q3": 100.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 95.8, "p2": 100.0}, "d2_import": {"y1": 88}}, {"id": "o_758", "no": "758", "ad": "ELİF", "soyad": "ÖZDEMİR", "sinif": "10-D", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 85.0, "y2": 85.0, "q1": 68.0, "q2": 55.0, "q3": 70.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 90.0, "p2": 100.0}, "d2_import": {"y1": 88}}, {"id": "o_812", "no": "812", "ad": "ORHAN TUĞRA", "soyad": "DUMAN", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 91.0, "y2": 81.0, "q1": 80.0, "q2": 80.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 94.0, "p2": 100.0}, "d2_import": {"y1": 88}}, {"id": "o_728", "no": "728", "ad": "ZEYNEP", "soyad": "ÇUKADAR", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 86.0, "y2": 95.0, "q1": 88.0, "q2": 70.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 96.76, "p2": 100.0}, "d2_import": {"y1": 88}}, {"id": "o_874", "no": "874", "ad": "HAZAL", "soyad": "ERGİN", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 10, "donemler": {}, "d1_import": {"y1": 87.0, "y2": 94.0, "q1": 64.0, "q2": 60.0, "q3": null, "odev": 100.0, "kat": 4.0, "haz": 4.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 95.5, "p2": 100.0}, "d2_import": {"y1": 88}}, {"id": "o_866", "no": "866", "ad": "HAYAT", "soyad": "KAÇAN", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 83.0, "y2": 80.0, "q1": null, "q2": 40.0, "q3": 87.5, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 86.5, "p2": 95.0}, "d2_import": {"y1": 87}}, {"id": "o_710", "no": "710", "ad": "GÖKHAN", "soyad": "DEMİR", "sinif": "10-B", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 97.0, "y2": 100.0, "q1": 93.0, "q2": 80.0, "q3": 100.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 87}}, {"id": "o_713", "no": "713", "ad": "NEHİR", "soyad": "TATLI", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 11, "donemler": {}, "d1_import": {"y1": 85.0, "y2": 85.0, "q1": 72.0, "q2": null, "q3": null, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 90.0, "p2": 95.0}, "d2_import": {"y1": 87}}, {"id": "o_778", "no": "778", "ad": "EMRE KAĞAN", "soyad": "UZUN", "sinif": "10-B", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 84.0, "y2": 85.0, "q1": 53.0, "q2": 25.0, "q3": 80.5, "odev": 100.0, "kat": 2.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 89.5, "p2": 95.0}, "d2_import": {"y1": 87}}, {"id": "o_855", "no": "855", "ad": "ELA", "soyad": "ÖGÜL", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 91.0, "y2": 100.0, "q1": 86.0, "q2": 65.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 87}}, {"id": "o_825", "no": "825", "ad": "SEHER", "soyad": "DENGİZ", "sinif": "10-D", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 90.0, "y2": 93.0, "q1": 89.0, "q2": 60.0, "q3": 91.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 96.5, "p2": 100.0}, "d2_import": {"y1": 87}}, {"id": "o_781", "no": "781", "ad": "IŞIL", "soyad": "GÜMÜŞ", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 96.0, "y2": 93.0, "q1": 64.0, "q2": 60.0, "q3": null, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 99.5, "p2": 100.0}, "d2_import": {"y1": 87}}, {"id": "o_871", "no": "871", "ad": "İREMSU", "soyad": "GÜNERİ", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 94.0, "y2": 97.0, "q1": 65.0, "q2": 70.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 87}}, {"id": "o_774", "no": "774", "ad": "HAMDİ BATIN", "soyad": "ÇAĞIRAN", "sinif": "10-A", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 87.0, "y2": 88.0, "q1": 69.0, "q2": null, "q3": 84.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 92.5, "p2": 100.0}, "d2_import": {"y1": 86}}, {"id": "o_729", "no": "729", "ad": "ELİFGÜL", "soyad": "DAĞLI", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 86.0, "y2": 87.0, "q1": 74.0, "q2": 80.0, "q3": 87.5, "odev": 100.0, "kat": 3.0, "haz": 4.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 91.5, "p2": 95.0}, "d2_import": {"y1": 86}}, {"id": "o_766", "no": "766", "ad": "AHMET FARUK", "soyad": "EKİN", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 9, "donemler": {}, "d1_import": {"y1": 85.0, "y2": 76.0, "q1": 57.0, "q2": 45.0, "q3": 77.0, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 85.5, "p2": 90.0}, "d2_import": {"y1": 86}}, {"id": "o_724", "no": "724", "ad": "HEVİN", "soyad": "YILDIRIM", "sinif": "10-D", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 74.0, "y2": 78.0, "q1": 88.0, "q2": 70.0, "q3": 87.5, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 85.28, "p2": 95.0}, "d2_import": {"y1": 86}}, {"id": "o_725", "no": "725", "ad": "DENİZ", "soyad": "ASLAN", "sinif": "10-A", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 9, "donemler": {}, "d1_import": {"y1": 90.0, "y2": 94.0, "q1": 89.0, "q2": 65.0, "q3": 84.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 97.0, "p2": 100.0}, "d2_import": {"y1": 85}}, {"id": "o_826", "no": "826", "ad": "ROHAT", "soyad": "ÖZER", "sinif": "10-A", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 83.0, "y2": 94.0, "q1": 91.0, "q2": 75.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 93.5, "p2": 100.0}, "d2_import": {"y1": 85}}, {"id": "o_739", "no": "739", "ad": "MEHMET EREN", "soyad": "SOYER", "sinif": "10-B", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 83.0, "y2": 76.0, "q1": 73.0, "q2": 65.0, "q3": 84.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 87.4, "p2": 100.0}, "d2_import": {"y1": 85}}, {"id": "o_813", "no": "813", "ad": "GÖKSU", "soyad": "AKSOYLU", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 87.0, "y2": 91.0, "q1": 60.0, "q2": 75.0, "q3": 84.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 94.0, "p2": 100.0}, "d2_import": {"y1": 85}}, {"id": "o_889", "no": "889", "ad": "EYLÜL DURU", "soyad": "AYDIN", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 77.0, "y2": 88.0, "q1": 65.0, "q2": 55.0, "q3": 91.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 91.48, "p2": 100.0}, "d2_import": {"y1": 85}}, {"id": "o_892", "no": "892", "ad": "EDA", "soyad": "AVAT", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 84.0, "y2": 90.0, "q1": 82.0, "q2": 70.0, "q3": 87.5, "odev": 100.0, "kat": 4.0, "haz": 4.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 92.0, "p2": 100.0}, "d2_import": {"y1": 85}}, {"id": "o_880", "no": "880", "ad": "ÖMER TAHA", "soyad": "KIZILBAĞLI", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 77.0, "y2": 64.0, "q1": 61.0, "q2": null, "q3": 84.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 85.24, "p2": 85.0}, "d2_import": {"y1": 85}}, {"id": "o_582", "no": "582", "ad": "KADİR UMUT", "soyad": "YAPICI", "sinif": "10-A", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 1, "donemler": {}, "d1_import": {"y1": 94.0, "y2": 85.0, "q1": 61.0, "q2": 65.0, "q3": 84.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 94.5, "p2": 100.0}, "d2_import": {"y1": 84}}, {"id": "o_776", "no": "776", "ad": "ALA SU", "soyad": "UKUŞ", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 94.0, "y2": 87.0, "q1": null, "q2": 20.0, "q3": 87.5, "odev": 100.0, "kat": 5.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 95.5, "p2": 100.0}, "d2_import": {"y1": 84}}, {"id": "o_719", "no": "719", "ad": "ALİ EREN", "soyad": "DEMİRAĞ", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 74.0, "y2": 86.0, "q1": 68.0, "q2": 60.0, "q3": null, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 85.0, "p2": 100.0}, "d2_import": {"y1": 84}}, {"id": "o_877", "no": "877", "ad": "ALPAR KEMAL", "soyad": "TAŞTAN", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 63.0, "y2": 61.0, "q1": 55.0, "q2": null, "q3": 87.5, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 76.88, "p2": 90.0}, "d2_import": {"y1": 84}}, {"id": "o_848", "no": "848", "ad": "YUSUF", "soyad": "ÖNCEL", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 77.0, "y2": null, "q1": 84.0, "q2": 60.0, "q3": 94.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 88.4, "p2": 95.0}, "d2_import": {"y1": 84}}, {"id": "o_872", "no": "872", "ad": "ECEM NERİS", "soyad": "YÜKSEL", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 97.0, "y2": 87.0, "q1": 85.0, "q2": 55.0, "q3": null, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 97.0, "p2": 100.0}, "d2_import": {"y1": 83}}, {"id": "o_832", "no": "832", "ad": "AYŞE NAZ", "soyad": "HARMANCI", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 82.0, "y2": 70.0, "q1": 63.0, "q2": 50.0, "q3": 70.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 81.0, "p2": 90.0}, "d2_import": {"y1": 83}}, {"id": "o_786", "no": "786", "ad": "AHMET EMRE", "soyad": "DAMKACI", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 91.0, "y2": 86.0, "q1": 94.0, "q2": 60.0, "q3": 84.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 94.36, "p2": 100.0}, "d2_import": {"y1": 83}}, {"id": "o_798", "no": "798", "ad": "FURKAN", "soyad": "GÜNDAY", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 75.0, "y2": 67.0, "q1": 63.0, "q2": 45.0, "q3": null, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 76.0, "p2": 90.0}, "d2_import": {"y1": 83}}, {"id": "o_959", "no": "959", "ad": "EDA SU", "soyad": "KÖSE", "sinif": "10-D", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 80.0, "y2": 85.0, "q1": null, "q2": 75.0, "q3": null, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 87.5, "p2": 100.0}, "d2_import": {"y1": 83}}, {"id": "o_847", "no": "847", "ad": "AHMET TARIK", "soyad": "KARAER", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 92.0, "y2": 100.0, "q1": 75.0, "q2": 90.0, "q3": 98.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 83}}, {"id": "o_791", "no": "791", "ad": "ZEYNEP", "soyad": "YILDIZ", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 5, "donemler": {}, "d1_import": {"y1": 83.0, "y2": 65.0, "q1": 49.0, "q2": 40.0, "q3": 73.5, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 1.0, "p1": 79.0, "p2": 90.0}, "d2_import": {"y1": 82}}, {"id": "o_763", "no": "763", "ad": "HATİCE ŞEVVAL", "soyad": "BUKA", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 5, "donemler": {}, "d1_import": {"y1": 84.0, "y2": 76.0, "q1": 64.0, "q2": 70.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 92.56, "p2": 100.0}, "d2_import": {"y1": 82}}, {"id": "o_854", "no": "854", "ad": "BENGİ BEREN", "soyad": "KURUÇAY", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 89.0, "y2": 92.0, "q1": 75.0, "q2": 65.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 95.5, "p2": 100.0}, "d2_import": {"y1": 82}}, {"id": "o_802", "no": "802", "ad": "SELİN", "soyad": "ŞAHİN", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 79.0, "y2": 74.0, "q1": 85.0, "q2": 65.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 87.16, "p2": 100.0}, "d2_import": {"y1": 81}}, {"id": "o_900", "no": "900", "ad": "MEHMET ALPEREN", "soyad": "ARSLAN", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 95.0, "y2": 92.0, "q1": 74.0, "q2": 75.0, "q3": 91.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 98.5, "p2": 100.0}, "d2_import": {"y1": 81}}, {"id": "o_716", "no": "716", "ad": "KEREM ERZADE", "soyad": "AKDİ", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 88.0, "y2": 70.0, "q1": 65.0, "q2": 35.0, "q3": 91.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 90.64, "p2": 100.0}, "d2_import": {"y1": 81}}, {"id": "o_732", "no": "732", "ad": "BERİL", "soyad": "ÇİLALİOĞLU", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 91.0, "y2": 95.0, "q1": 72.0, "q2": 55.0, "q3": 77.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 98.0, "p2": 100.0}, "d2_import": {"y1": 81}}, {"id": "o_738", "no": "738", "ad": "MELİS", "soyad": "TURGUT", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 94.0, "y2": 100.0, "q1": null, "q2": 75.0, "q3": 94.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 100.0, "p2": 100.0}, "d2_import": {"y1": 81}}, {"id": "o_750", "no": "750", "ad": "EFSA", "soyad": "ALKAN", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 78.0, "y2": 59.0, "q1": 67.0, "q2": 35.0, "q3": 70.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 74.84, "p2": 95.0}, "d2_import": {"y1": 80}}, {"id": "o_797", "no": "797", "ad": "ECRİN", "soyad": "OK", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 1, "donemler": {}, "d1_import": {"y1": 79.0, "y2": 80.0, "q1": 62.0, "q2": 60.0, "q3": 87.5, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 85.88, "p2": 95.0}, "d2_import": {"y1": 80}}, {"id": "o_897", "no": "897", "ad": "MELİKE", "soyad": "ŞENTÜRK", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 94.0, "y2": 87.0, "q1": 81.0, "q2": 55.0, "q3": null, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 95.5, "p2": 100.0}, "d2_import": {"y1": 80}}, {"id": "o_790", "no": "790", "ad": "YUSUF KENAN", "soyad": "ŞİRİN", "sinif": "10-A", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 72.0, "y2": 63.0, "q1": 68.0, "q2": 30.0, "q3": 52.5, "odev": 100.0, "kat": 0.0, "haz": 1.0, "sor": 3.0, "tut": 3.0, "sur": 5.0, "p1": 72.5, "p2": 70.0}, "d2_import": {"y1": 79}}, {"id": "o_765", "no": "765", "ad": "ZEYNEP MERYEM", "soyad": "GÜNEŞ", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 35.0, "y2": 47.0, "q1": null, "q2": 10.0, "q3": null, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 46.0, "p2": 70.0}, "d2_import": {"y1": 79}}, {"id": "o_753", "no": "753", "ad": "FURKAN EFE", "soyad": "KÜYÜKOĞLU", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 14, "donemler": {}, "d1_import": {"y1": 80.0, "y2": 80.0, "q1": 63.0, "q2": 65.0, "q3": null, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 85.0, "p2": 95.0}, "d2_import": {"y1": 79}}, {"id": "o_767", "no": "767", "ad": "MUHAMMED EMİN", "soyad": "GÜRBÜZ", "sinif": "10-B", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 11, "donemler": {}, "d1_import": {"y1": 87.0, "y2": 78.0, "q1": 79.0, "q2": 80.0, "q3": null, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 87.5, "p2": 100.0}, "d2_import": {"y1": 78}}, {"id": "o_879", "no": "879", "ad": "NESİBE BÜŞRA", "soyad": "UZUN", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 77.0, "y2": 70.0, "q1": 59.0, "q2": 60.0, "q3": 73.5, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 78.5, "p2": 95.0}, "d2_import": {"y1": 77}}, {"id": "o_888", "no": "888", "ad": "TİMUR", "soyad": "PANAYIRCI", "sinif": "10-A", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 86.0, "y2": 92.0, "q1": 76.0, "q2": 80.0, "q3": null, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 94.0, "p2": 100.0}, "d2_import": {"y1": 77}}, {"id": "o_862", "no": "862", "ad": "MELİH", "soyad": "ATEŞ", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 88.0, "y2": 81.0, "q1": 54.0, "q2": 50.0, "q3": 80.5, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 89.5, "p2": 95.0}, "d2_import": {"y1": 77}}, {"id": "o_785", "no": "785", "ad": "ABDULHAMİD", "soyad": "ARSLAN", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 65.0, "y2": 64.0, "q1": 58.0, "q2": 30.0, "q3": 84.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 79.0, "p2": 80.0}, "d2_import": {"y1": 77}}, {"id": "o_779", "no": "779", "ad": "AYŞE", "soyad": "UYAR", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 10, "donemler": {}, "d1_import": {"y1": 78.0, "y2": 70.0, "q1": 55.0, "q2": 55.0, "q3": 73.5, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 79.0, "p2": 95.0}, "d2_import": {"y1": 76}}, {"id": "o_861", "no": "861", "ad": "AYAZ", "soyad": "ÖKSÜZ", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 81.0, "y2": 77.0, "q1": 61.0, "q2": 35.0, "q3": 66.5, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 84.0, "p2": 90.0}, "d2_import": {"y1": 76}}, {"id": "o_789", "no": "789", "ad": "HÜLYA ASYA", "soyad": "CURA", "sinif": "10-D", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 84.0, "y2": 81.0, "q1": 81.0, "q2": 60.0, "q3": 91.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 88.28, "p2": 100.0}, "d2_import": {"y1": 76}}, {"id": "o_784", "no": "784", "ad": "KUZEY", "soyad": "SAYGIOĞLU", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 76.0, "y2": 64.0, "q1": 57.0, "q2": 50.0, "q3": 73.5, "odev": 100.0, "kat": 2.0, "haz": 2.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 75.28, "p2": 90.0}, "d2_import": {"y1": 76}}, {"id": "o_747", "no": "747", "ad": "AHMET FATİH", "soyad": "ÇALIŞKAN", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 12, "donemler": {}, "d1_import": {"y1": 82.0, "y2": 78.0, "q1": 72.0, "q2": 55.0, "q3": null, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 85.0, "p2": 95.0}, "d2_import": {"y1": 76}}, {"id": "o_844", "no": "844", "ad": "MUHAMMED TAHA", "soyad": "BİNİCİ", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 63.0, "y2": 58.0, "q1": null, "q2": 35.0, "q3": null, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 3.0, "tut": 3.0, "sur": 3.0, "p1": 65.5, "p2": 70.0}, "d2_import": {"y1": 75}}, {"id": "o_893", "no": "893", "ad": "YASEMİN", "soyad": "TAN", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 68.0, "y2": 70.0, "q1": null, "q2": 55.0, "q3": 73.5, "odev": 100.0, "kat": 4.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 79.04, "p2": 95.0}, "d2_import": {"y1": 75}}, {"id": "o_957", "no": "957", "ad": "TAHA", "soyad": "SUBAŞI", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 3, "donemler": {}, "d1_import": {"y1": 71.0, "y2": 70.0, "q1": 61.0, "q2": 50.0, "q3": 77.0, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 3.0, "tut": 3.0, "sur": 1.0, "p1": 75.5, "p2": 70.0}, "d2_import": {"y1": 75}}, {"id": "o_742", "no": "742", "ad": "ALİ", "soyad": "ŞAHİN", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 58.0, "y2": 70.0, "q1": 27.0, "q2": 15.0, "q3": 80.5, "odev": 100.0, "kat": 2.0, "haz": 2.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 75.6, "p2": 90.0}, "d2_import": {"y1": 75}}, {"id": "o_950", "no": "950", "ad": "ONUR", "soyad": "ÇELEBİ", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 83.0, "y2": 73.0, "q1": 54.0, "q2": 65.0, "q3": 77.0, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 83.68, "p2": 95.0}, "d2_import": {"y1": 75}}, {"id": "o_743", "no": "743", "ad": "BATUHAN", "soyad": "BARAN", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 80.0, "y2": 62.0, "q1": 54.0, "q2": 45.0, "q3": null, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 76.0, "p2": 90.0}, "d2_import": {"y1": 74}}, {"id": "o_803", "no": "803", "ad": "ÇAĞATAY", "soyad": "TOSUN", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 73.0, "y2": 75.0, "q1": 52.0, "q2": 45.0, "q3": 80.5, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 79.0, "p2": 90.0}, "d2_import": {"y1": 74}}, {"id": "o_817", "no": "817", "ad": "RESUL EYÜP", "soyad": "KIZILKUŞ", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 6, "donemler": {}, "d1_import": {"y1": 82.0, "y2": 85.0, "q1": 35.0, "q2": 35.0, "q3": 70.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 88.5, "p2": 100.0}, "d2_import": {"y1": 74}}, {"id": "o_806", "no": "806", "ad": "CEYLA ADA", "soyad": "ÖZERHAN", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 81.0, "y2": 87.0, "q1": 53.0, "q2": 20.0, "q3": 77.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 89.0, "p2": 95.0}, "d2_import": {"y1": 73}}, {"id": "o_740", "no": "740", "ad": "NECMİYE SENA", "soyad": "ÖZDOĞAN", "sinif": "10-A", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 71.0, "y2": 60.0, "q1": 39.0, "q2": 55.0, "q3": 77.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 77.48, "p2": 90.0}, "d2_import": {"y1": 72}}, {"id": "o_709", "no": "709", "ad": "ALPEREN", "soyad": "BAYSAL", "sinif": "10-B", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 14, "donemler": {}, "d1_import": {"y1": 78.0, "y2": 75.0, "q1": 64.0, "q2": 25.0, "q3": 77.0, "odev": 100.0, "kat": 2.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 4.0, "p1": 81.5, "p2": 90.0}, "d2_import": {"y1": 72}}, {"id": "o_949", "no": "949", "ad": "AYBÜKE", "soyad": "HACIOSMANOĞLU", "sinif": "10-C", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 10, "donemler": {}, "d1_import": {"y1": 72.0, "y2": 85.0, "q1": 75.0, "q2": 45.0, "q3": null, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 83.5, "p2": 100.0}, "d2_import": {"y1": 72}}, {"id": "o_876", "no": "876", "ad": "ÇAĞLA", "soyad": "YILMAZ", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 8, "donemler": {}, "d1_import": {"y1": 65.0, "y2": 52.0, "q1": 62.0, "q2": 25.0, "q3": 66.5, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 1.0, "p1": 64.36, "p2": 90.0}, "d2_import": {"y1": 72}}, {"id": "o_761", "no": "761", "ad": "KEREM", "soyad": "KARAGÖZ", "sinif": "10-A", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 82.0, "y2": 85.0, "q1": 48.0, "q2": 40.0, "q3": null, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 88.5, "p2": 95.0}, "d2_import": {"y1": 71}}, {"id": "o_868", "no": "868", "ad": "ABDÜLKADİR", "soyad": "USTAOĞLU", "sinif": "10-A", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 92.0, "y2": 56.0, "q1": 79.0, "q2": 60.0, "q3": 84.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 82.88, "p2": 90.0}, "d2_import": {"y1": 70}}, {"id": "o_792", "no": "792", "ad": "ELA", "soyad": "GÜLTEKİN", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 2, "donemler": {}, "d1_import": {"y1": 80.0, "y2": 70.0, "q1": 26.0, "q2": 30.0, "q3": 87.5, "odev": 100.0, "kat": 2.0, "haz": 2.0, "sor": 5.0, "tut": 5.0, "sur": 2.0, "p1": 80.8, "p2": 100.0}, "d2_import": {"y1": 70}}, {"id": "o_670", "no": "670", "ad": "BEGÜM", "soyad": "TEKİN", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 82.0, "y2": 76.0, "q1": 56.0, "q2": 45.0, "q3": 73.5, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 84.0, "p2": 95.0}, "d2_import": {"y1": 70}}, {"id": "o_839", "no": "839", "ad": "SAİT EYMEN", "soyad": "TUNÇ", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 5, "donemler": {}, "d1_import": {"y1": 65.0, "y2": 50.0, "q1": null, "q2": 30.0, "q3": 70.0, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 1.0, "p1": 65.8, "p2": 80.0}, "d2_import": {"y1": 70}}, {"id": "o_772", "no": "772", "ad": "MEHMET CAN", "soyad": "ERTEKİN", "sinif": "10-B", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 7, "donemler": {}, "d1_import": {"y1": 69.0, "y2": 85.0, "q1": null, "q2": 60.0, "q3": 84.0, "odev": 100.0, "kat": 4.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 86.0, "p2": 100.0}, "d2_import": {"y1": 68}}, {"id": "o_965", "no": "965", "ad": "MEHMET ALİ", "soyad": "ARTUN", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 90.0, "y2": 82.0, "q1": 69.0, "q2": null, "q3": 77.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 91.0, "p2": 95.0}, "d2_import": {"y1": 67}}, {"id": "o_890", "no": "890", "ad": "DEFNE DURU", "soyad": "CİNEL", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 86.0, "y2": 73.0, "q1": 57.0, "q2": null, "q3": 87.5, "odev": 100.0, "kat": 5.0, "haz": 5.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 89.08, "p2": 100.0}, "d2_import": {"y1": 67}}, {"id": "o_762", "no": "762", "ad": "MUHAMMED SALİH", "soyad": "ARTUN", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 14, "donemler": {}, "d1_import": {"y1": 92.0, "y2": 60.0, "q1": 78.0, "q2": 40.0, "q3": null, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 1.0, "p1": 81.0, "p2": 90.0}, "d2_import": {"y1": 67}}, {"id": "o_764", "no": "764", "ad": "UĞUR", "soyad": "BOZHÜYÜK", "sinif": "10-C", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 14, "donemler": {}, "d1_import": {"y1": 88.0, "y2": 79.0, "q1": 58.0, "q2": 40.0, "q3": null, "odev": 100.0, "kat": 1.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 1.0, "p1": 88.5, "p2": 95.0}, "d2_import": {"y1": 66}}, {"id": "o_800", "no": "800", "ad": "FİKRET", "soyad": "GÜLTEKİN", "sinif": "10-F", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 3, "donemler": {}, "d1_import": {"y1": 75.0, "y2": 72.0, "q1": 90.0, "q2": 50.0, "q3": 80.5, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 84.04, "p2": 95.0}, "d2_import": {"y1": 63}}, {"id": "o_769", "no": "769", "ad": "AHMET SALİH", "soyad": "TUNÇDEMİR", "sinif": "10-A", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 3, "donemler": {}, "d1_import": {"y1": 71.0, "y2": 85.0, "q1": 38.0, "q2": 35.0, "q3": 70.0, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 5.0, "p1": 83.0, "p2": 90.0}, "d2_import": {"y1": 62}}, {"id": "o_835", "no": "835", "ad": "ASLI", "soyad": "DOĞRUYOL", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 12, "donemler": {}, "d1_import": {"y1": 75.0, "y2": 62.0, "q1": 75.0, "q2": null, "q3": null, "odev": 100.0, "kat": 2.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 0.0, "p1": 73.5, "p2": 90.0}, "d2_import": {"y1": 62}}, {"id": "o_873", "no": "873", "ad": "NAZLI", "soyad": "ÖZMEN", "sinif": "10-B", "cinsiyet": "K", "pansiyonlu": true, "devamsizlik": 12, "donemler": {}, "d1_import": {"y1": 74.0, "y2": 88.0, "q1": 69.0, "q2": 70.0, "q3": 94.5, "odev": 100.0, "kat": 3.0, "haz": 3.0, "sor": 5.0, "tut": 5.0, "sur": 3.0, "p1": 88.0, "p2": 95.0}, "d2_import": {"y1": 61}}, {"id": "o_749", "no": "749", "ad": "KAAN", "soyad": "KEDEK", "sinif": "10-B", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 3, "donemler": {}, "d1_import": {"y1": 76.0, "y2": 55.0, "q1": 49.0, "q2": 50.0, "q3": 59.5, "odev": 100.0, "kat": 0.0, "haz": 1.0, "sor": 3.0, "tut": 5.0, "sur": 5.0, "p1": 70.5, "p2": 70.0}, "d2_import": {"y1": 60}}, {"id": "o_894", "no": "894", "ad": "ALİ EREN", "soyad": "GÖKSAL", "sinif": "10-D", "cinsiyet": "E", "pansiyonlu": true, "devamsizlik": 4, "donemler": {}, "d1_import": {"y1": 76.0, "y2": 64.0, "q1": 41.0, "q2": 20.0, "q3": 56.0, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 1.0, "p1": 75.0, "p2": 90.0}, "d2_import": {"y1": 58}}, {"id": "o_851", "no": "851", "ad": "BERRA", "soyad": "CAN", "sinif": "10-D", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 10, "donemler": {}, "d1_import": {"y1": 82.0, "y2": 88.0, "q1": 55.0, "q2": null, "q3": 84.0, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 2.0, "p1": 90.0, "p2": 95.0}}, {"id": "o_734", "no": "734", "ad": "RENGİN BİLGE", "soyad": "PUR", "sinif": "10-E", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 7, "donemler": {}, "d1_import": {"y1": 91.0, "y2": 73.0, "q1": 37.0, "q2": 20.0, "q3": null, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 3.0, "tut": 3.0, "sur": 1.0, "p1": 87.0, "p2": 95.0}}, {"id": "o_856", "no": "856", "ad": "UMUT KAĞAN", "soyad": "YAZGAN", "sinif": "10-E", "cinsiyet": "E", "pansiyonlu": false, "devamsizlik": 0, "donemler": {}, "d1_import": {"y1": 87.0, "y2": null, "q1": null, "q2": null, "q3": null, "odev": 100.0, "kat": null, "haz": null, "sor": null, "tut": null, "sur": null, "p1": 92.0, "p2": 100.0}}, {"id": "o_899", "no": "899", "ad": "MELEK", "soyad": "MAMAR", "sinif": "10-F", "cinsiyet": "K", "pansiyonlu": false, "devamsizlik": 10, "donemler": {}, "d1_import": {"y1": 89.0, "y2": 66.0, "q1": 48.0, "q2": null, "q3": 66.5, "odev": 100.0, "kat": 1.0, "haz": 1.0, "sor": 5.0, "tut": 5.0, "sur": 1.0, "p1": 82.5, "p2": 90.0}}];
+
+// ── GRUP SİSTEMİ ──────────────────────────────────────────────────────────────
+function renderGrupBar() {
+  var chips = document.getElementById('grup-chips');
+  if (!chips) return;
+  chips.innerHTML = '';
+  Object.keys(GRUPLAR).forEach(function(gid) {
+    var g = GRUPLAR[gid];
+    var aktif = gid === AKTİF_GRUP;
+    var btn = document.createElement('button');
+    btn.textContent = g.ad;
+    btn.className = 'btn bsm';
+    btn.style.cssText = aktif
+      ? 'background:var(--a);color:#fff;border:none;'
+      : 'background:rgba(255,255,255,.12);color:#a8c8e8;border:1px solid rgba(255,255,255,.15);';
+    btn.onclick = function(){ grupSec(gid); };
+    chips.appendChild(btn);
+    // Sil butonu (tek grup varsa gizle)
+    if (Object.keys(GRUPLAR).length > 1) {
+      var del = document.createElement('button');
+      del.textContent = '×';
+      del.title = 'Grubu Sil';
+      del.style.cssText = 'background:rgba(244,63,94,.4);color:#fff;border:none;border-radius:5px;padding:2px 7px;cursor:pointer;font-size:13px;margin-left:-2px;margin-right:4px;';
+      del.onclick = function(e){ e.stopPropagation(); grupSil(gid); };
+      chips.appendChild(del);
+    }
+  });
+}
+
+function grupSec(gid) {
+  if (!GRUPLAR[gid]) return;
+  // Mevcut grubu kaydet
+  if (AKTİF_GRUP) GRUPLAR[AKTİF_GRUP] = JSON.parse(JSON.stringify(DATA));
+  AKTİF_GRUP = gid;
+  Object.assign(DATA, JSON.parse(JSON.stringify(GRUPLAR[gid])));
+  localStorage.setItem('nd_aktif', gid);
+  localStorage.setItem('nd_gruplar', JSON.stringify(GRUPLAR));
+  if (!DATA.aktifSinif) DATA.aktifSinif = getSiniflar()[0]||'';
+  renderGrupBar();
+  renderAll();
+  updateHeader();
+}
+
+function grupSil(gid) {
+  if (!confirm('Bu grup ve tüm verileri silinecek. Emin misiniz?')) return;
+  delete GRUPLAR[gid];
+  if (AKTİF_GRUP === gid) {
+    AKTİF_GRUP = Object.keys(GRUPLAR)[0]||null;
+    if (AKTİF_GRUP) Object.assign(DATA, GRUPLAR[AKTİF_GRUP]);
+  }
+  localStorage.setItem('nd_gruplar', JSON.stringify(GRUPLAR));
+  localStorage.setItem('nd_aktif', AKTİF_GRUP||'');
+  renderGrupBar();
+  renderAll();
+}
+
+function yeniGrupAc() {
+  document.getElementById('yg-ad').value = '';
+  document.getElementById('yg-liste').value = '';
+  document.getElementById('yg-onizleme').textContent = '';
+  document.getElementById('yg-ov').style.display = 'flex';
+  document.getElementById('yg-liste').oninput = function() {
+    var lines = this.value.trim().split('\n').filter(function(l){ return l.trim(); });
+    document.getElementById('yg-onizleme').textContent = lines.length + ' öğrenci algılandı';
+  };
+}
+
+function yeniGrupKaydet() {
+  var ad = document.getElementById('yg-ad').value.trim();
+  var liste = document.getElementById('yg-liste').value.trim();
+  if (!ad) { alert('Grup adı girin.'); return; }
+  if (!liste) { alert('Öğrenci listesi girin.'); return; }
+
+  var ogrenciler = [];
+  liste.split('\n').forEach(function(line, idx) {
+    line = line.trim();
+    if (!line) return;
+    var p = line.split(/[|,\t]/).map(function(x){ return x.trim(); });
+    if (p.length < 2) return;
+    var no = p[0], ad2 = p[1]||'', soyad = p[2]||'', sinif = p[3]||'';
+    // Tek kelimeyse ad+soyad birleşik olabilir
+    if (p.length === 2) {
+      var w = p[1].split(' ');
+      soyad = w.pop()||'';
+      ad2 = w.join(' ');
+    }
+    ogrenciler.push({
+      id: 'o_'+no+'_'+Date.now()+'_'+idx,
+      no: no, ad: ad2, soyad: soyad, sinif: sinif,
+      cinsiyet: '', pansiyonlu: false, devamsizlik: 0, donemler: {}
+    });
+  });
+
+  if (!ogrenciler.length) { alert('Geçerli öğrenci bulunamadı.'); return; }
+
+  var gid = 'g_' + Date.now();
+  GRUPLAR[gid] = { ad: ad, ogrenciler: ogrenciler, aktifDonem: 'd1', aktifSinif: ogrenciler[0]&&ogrenciler[0].sinif||'' };
+
+  // Mevcut grubu kaydet
+  if (AKTİF_GRUP) GRUPLAR[AKTİF_GRUP] = JSON.parse(JSON.stringify(DATA));
+
+  AKTİF_GRUP = gid;
+  Object.assign(DATA, JSON.parse(JSON.stringify(GRUPLAR[gid])));
+  localStorage.setItem('nd_gruplar', JSON.stringify(GRUPLAR));
+  localStorage.setItem('nd_aktif', gid);
+
+  document.getElementById('yg-ov').style.display = 'none';
+  renderGrupBar();
+  renderAll();
+  updateHeader();
+  alert(ogrenciler.length + ' öğrenci ile grup oluşturuldu!');
+}
+
+</script>
+<script>
+// __ND_AUTOLOAD_START__
+(function(){
+  if (!localStorage.getItem('nd_gruplar')) {
+    localStorage.setItem('nd_gruplar', "{\"g_1776627505677\": {\"ad\": \"10. S\u0131n\u0131f 2025-2026\", \"ogrenciler\": [{\"id\": \"o_582\", \"no\": \"582\", \"ad\": \"Kadir Umut\", \"soyad\": \"Yap\u0131c\u0131\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 94, \"y2\": 85, \"q1\": 61, \"q2\": 65, \"q3\": 84, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 94.5, \"p2\": 100}, \"d2\": {\"y1\": 84, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_714\", \"no\": \"714\", \"ad\": \"Atilla\", \"soyad\": \"\u00d6zl\u00fc\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 94, \"y2\": 87, \"q1\": 77, \"q2\": 70, \"q3\": 100, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 97.72, \"p2\": 100}, \"d2\": {\"y1\": 93, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_718\", \"no\": \"718\", \"ad\": \"Melih\", \"soyad\": \"Balc\u0131\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 73, \"y2\": 81, \"q1\": 79, \"q2\": 75, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 84.4, \"p2\": 95}, \"d2\": {\"y1\": 94, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_725\", \"no\": \"725\", \"ad\": \"Deniz\", \"soyad\": \"Aslan\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 90, \"y2\": 94, \"q1\": 89, \"q2\": 65, \"q3\": 84, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 97, \"p2\": 100}, \"d2\": {\"y1\": 85, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_740\", \"no\": \"740\", \"ad\": \"Necmiye Sena\", \"soyad\": \"\u00d6zdo\u011fan\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 71, \"y2\": 60, \"q1\": 39, \"q2\": 55, \"q3\": 77, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 77.48, \"p2\": 90}, \"d2\": {\"y1\": 72, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_761\", \"no\": \"761\", \"ad\": \"Kerem\", \"soyad\": \"Karag\u00f6z\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 82, \"y2\": 85, \"q1\": 48, \"q2\": 40, \"q3\": null, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 88.5, \"p2\": 95}, \"d2\": {\"y1\": 71, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_768\", \"no\": \"768\", \"ad\": \"Melis\", \"soyad\": \"Aslan\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 100, \"y2\": 100, \"q1\": 96, \"q2\": 80, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 97, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_769\", \"no\": \"769\", \"ad\": \"Ahmet Salih\", \"soyad\": \"Tun\u00e7demir\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 71, \"y2\": 85, \"q1\": 38, \"q2\": 35, \"q3\": 70, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 83, \"p2\": 90}, \"d2\": {\"y1\": 62, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_773\", \"no\": \"773\", \"ad\": \"Tuna\", \"soyad\": \"U\u011furlu\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 95, \"y2\": 97, \"q1\": 94, \"q2\": 75, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 90, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_774\", \"no\": \"774\", \"ad\": \"Hamdi Bat\u0131n\", \"soyad\": \"\u00c7a\u011f\u0131ran\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 87, \"y2\": 88, \"q1\": 69, \"q2\": null, \"q3\": 84, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 92.5, \"p2\": 100}, \"d2\": {\"y1\": 86, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_776\", \"no\": \"776\", \"ad\": \"Ala Su\", \"soyad\": \"Uku\u015f\u015eirin\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 94, \"y2\": 87, \"q1\": null, \"q2\": 20, \"q3\": 87.5, \"odev\": 100, \"kat\": 5, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 95.5, \"p2\": 100}, \"d2\": {\"y1\": 84, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_790\", \"no\": \"790\", \"ad\": \"Yusuf Kenan\", \"soyad\": \"\u015eirin\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 72, \"y2\": 63, \"q1\": 68, \"q2\": 30, \"q3\": 52.5, \"odev\": 100, \"kat\": 0, \"haz\": 1, \"sor\": 3, \"tut\": 3, \"sur\": 5, \"p1\": 72.5, \"p2\": 70}, \"d2\": {\"y1\": 79, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_795\", \"no\": \"795\", \"ad\": \"Emirhan\", \"soyad\": \"A\u00e7\u0131kg\u00f6z\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 95, \"y2\": 100, \"q1\": 56, \"q2\": 90, \"q3\": 100, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 100, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_802\", \"no\": \"802\", \"ad\": \"Selin\", \"soyad\": \"\u015eahin\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 79, \"y2\": 74, \"q1\": 85, \"q2\": 65, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 87.16, \"p2\": 100}, \"d2\": {\"y1\": 81, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_806\", \"no\": \"806\", \"ad\": \"Ceyla Ada\", \"soyad\": \"\u00d6zerhan\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 81, \"y2\": 87, \"q1\": 53, \"q2\": 20, \"q3\": 77, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 89, \"p2\": 95}, \"d2\": {\"y1\": 73, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_820\", \"no\": \"820\", \"ad\": \"Hatice Naz\", \"soyad\": \"Akku\u015f\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 93, \"y2\": 85, \"q1\": 74, \"q2\": 70, \"q3\": 98, \"odev\": 100, \"kat\": 3, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 94, \"p2\": 100}, \"d2\": {\"y1\": 97, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_826\", \"no\": \"826\", \"ad\": \"Rohat\", \"soyad\": \"\u00d6zer\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 83, \"y2\": 94, \"q1\": 91, \"q2\": 75, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 93.5, \"p2\": 100}, \"d2\": {\"y1\": 85, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_837\", \"no\": \"837\", \"ad\": \"Ecrin\", \"soyad\": \"Bayrakl\u0131\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 92, \"y2\": 96, \"q1\": 98, \"q2\": 80, \"q3\": 91, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 99, \"p2\": 100}, \"d2\": {\"y1\": 95, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_850\", \"no\": \"850\", \"ad\": \"Elif M\u00fcge\", \"soyad\": \"Sancakl\u0131\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 89, \"y2\": 79, \"q1\": 76, \"q2\": 15, \"q3\": 87.5, \"odev\": 100, \"kat\": 3, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 89, \"p2\": 95}, \"d2\": {\"y1\": 88, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_866\", \"no\": \"866\", \"ad\": \"Hayat\", \"soyad\": \"Ka\u00e7an\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 83, \"y2\": 80, \"q1\": null, \"q2\": 40, \"q3\": 87.5, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 86.5, \"p2\": 95}, \"d2\": {\"y1\": 87, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_868\", \"no\": \"868\", \"ad\": \"Abd\u00fclkadir\", \"soyad\": \"Ustao\u011flu\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 92, \"y2\": 56, \"q1\": 79, \"q2\": 60, \"q3\": 84, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 82.88, \"p2\": 90}, \"d2\": {\"y1\": 70, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_872\", \"no\": \"872\", \"ad\": \"Ecem Neris\", \"soyad\": \"Y\u00fcksel\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 97, \"y2\": 87, \"q1\": 85, \"q2\": 55, \"q3\": null, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 97, \"p2\": 100}, \"d2\": {\"y1\": 83, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_879\", \"no\": \"879\", \"ad\": \"Nesibe B\u00fc\u015fra\", \"soyad\": \"Uzun\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 77, \"y2\": 70, \"q1\": 59, \"q2\": 60, \"q3\": 73.5, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 78.5, \"p2\": 95}, \"d2\": {\"y1\": 77, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_888\", \"no\": \"888\", \"ad\": \"Timur\", \"soyad\": \"Panay\u0131rc\u0131\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 86, \"y2\": 92, \"q1\": 76, \"q2\": 80, \"q3\": null, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 94, \"p2\": 100}, \"d2\": {\"y1\": 77, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_896\", \"no\": \"896\", \"ad\": \"\u0130rem\", \"soyad\": \"Balta\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 87, \"y2\": 96, \"q1\": 69, \"q2\": 80, \"q3\": 91, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 96.5, \"p2\": 100}, \"d2\": {\"y1\": 100, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_963\", \"no\": \"963\", \"ad\": \"Yusuf\", \"soyad\": \"Hakim\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 85, \"y2\": 91, \"q1\": 71, \"q2\": 85, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 93, \"p2\": 100}, \"d2\": {\"y1\": 88, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_969\", \"no\": \"969\", \"ad\": \"Merve\", \"soyad\": \"Tetik\", \"sinif\": \"10-A\", \"donemler\": {\"d1\": {\"y1\": 83, \"y2\": 88, \"q1\": 97, \"q2\": 75, \"q3\": 87.5, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 91.88, \"p2\": 100}, \"d2\": {\"y1\": 90, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_709\", \"no\": \"709\", \"ad\": \"Alperen\", \"soyad\": \"Baysal\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 78, \"y2\": 75, \"q1\": 64, \"q2\": 25, \"q3\": 77, \"odev\": 100, \"kat\": 2, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 4, \"p1\": 81.5, \"p2\": 90}, \"d2\": {\"y1\": 72, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_710\", \"no\": \"710\", \"ad\": \"G\u00f6khan\", \"soyad\": \"Demir\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 97, \"y2\": 100, \"q1\": 93, \"q2\": 80, \"q3\": 100, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 87, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_713\", \"no\": \"713\", \"ad\": \"Nehir\", \"soyad\": \"Tatl\u0131\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 85, \"y2\": 85, \"q1\": 72, \"q2\": null, \"q3\": null, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 90, \"p2\": 95}, \"d2\": {\"y1\": 87, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_729\", \"no\": \"729\", \"ad\": \"Elifg\u00fcl\", \"soyad\": \"Da\u011fl\u0131\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 86, \"y2\": 87, \"q1\": 74, \"q2\": 80, \"q3\": 87.5, \"odev\": 100, \"kat\": 3, \"haz\": 4, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 91.5, \"p2\": 95}, \"d2\": {\"y1\": 86, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_739\", \"no\": \"739\", \"ad\": \"Mehmet Eren\", \"soyad\": \"Soyer\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 83, \"y2\": 76, \"q1\": 73, \"q2\": 65, \"q3\": 84, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 87.4, \"p2\": 100}, \"d2\": {\"y1\": 85, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_749\", \"no\": \"749\", \"ad\": \"Kaan\", \"soyad\": \"Kedek\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 76, \"y2\": 55, \"q1\": 49, \"q2\": 50, \"q3\": 59.5, \"odev\": 100, \"kat\": 0, \"haz\": 1, \"sor\": 3, \"tut\": 5, \"sur\": 5, \"p1\": 70.5, \"p2\": 70}, \"d2\": {\"y1\": 60, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_750\", \"no\": \"750\", \"ad\": \"Efsa\", \"soyad\": \"Alkan\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 78, \"y2\": 59, \"q1\": 67, \"q2\": 35, \"q3\": 70, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 74.84, \"p2\": 95}, \"d2\": {\"y1\": 80, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_760\", \"no\": \"760\", \"ad\": \"\u00d6mer S\u00fcleyman\", \"soyad\": \"\u00c7ok\u00e7etin\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 92, \"y2\": 81, \"q1\": 76, \"q2\": 75, \"q3\": 80.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 91.5, \"p2\": 100}, \"d2\": {\"y1\": 94, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_765\", \"no\": \"765\", \"ad\": \"Zeynep Meryem\", \"soyad\": \"G\u00fcne\u015f\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 35, \"y2\": 47, \"q1\": null, \"q2\": 10, \"q3\": null, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 46, \"p2\": 70}, \"d2\": {\"y1\": 79, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_767\", \"no\": \"767\", \"ad\": \"Muhammed Emin\", \"soyad\": \"G\u00fcrb\u00fcz\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 87, \"y2\": 78, \"q1\": 79, \"q2\": 80, \"q3\": null, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 87.5, \"p2\": 100}, \"d2\": {\"y1\": 78, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_772\", \"no\": \"772\", \"ad\": \"Mehmet Can\", \"soyad\": \"Ertekin\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 69, \"y2\": 85, \"q1\": null, \"q2\": 60, \"q3\": 84, \"odev\": 100, \"kat\": 4, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 86, \"p2\": 100}, \"d2\": {\"y1\": 68, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_778\", \"no\": \"778\", \"ad\": \"Emre Ka\u011fan\", \"soyad\": \"Uzun\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 84, \"y2\": 85, \"q1\": 53, \"q2\": 25, \"q3\": 80.5, \"odev\": 100, \"kat\": 2, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 89.5, \"p2\": 95}, \"d2\": {\"y1\": 87, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_779\", \"no\": \"779\", \"ad\": \"Ay\u015fe\", \"soyad\": \"Uyar\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 78, \"y2\": 70, \"q1\": 55, \"q2\": 55, \"q3\": 73.5, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 79, \"p2\": 95}, \"d2\": {\"y1\": 76, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_780\", \"no\": \"780\", \"ad\": \"Ceren\", \"soyad\": \"Uzun\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 86, \"y2\": 97, \"q1\": 99, \"q2\": 75, \"q3\": 91, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 97.48, \"p2\": 100}, \"d2\": {\"y1\": 88, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_788\", \"no\": \"788\", \"ad\": \"Ege Toprak\", \"soyad\": \"Kap\u0131s\u0131z\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 94, \"y2\": 93, \"q1\": 77, \"q2\": 55, \"q3\": 87.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 98.5, \"p2\": 100}, \"d2\": {\"y1\": 100, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_799\", \"no\": \"799\", \"ad\": \"\u0130rem\", \"soyad\": \"Ayd\u0131n\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 84, \"y2\": 88, \"q1\": 70, \"q2\": 65, \"q3\": 87.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 91, \"p2\": 100}, \"d2\": {\"y1\": 94, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_809\", \"no\": \"809\", \"ad\": \"Duru\", \"soyad\": \"Dostagiden\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 92, \"y2\": 100, \"q1\": 78, \"q2\": 85, \"q3\": 94, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 92, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_835\", \"no\": \"835\", \"ad\": \"Asl\u0131\", \"soyad\": \"Do\u011fruyol\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 75, \"y2\": 62, \"q1\": 75, \"q2\": null, \"q3\": null, \"odev\": 100, \"kat\": 2, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 0, \"p1\": 73.5, \"p2\": 90}, \"d2\": {\"y1\": 62, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_840\", \"no\": \"840\", \"ad\": \"G\u00fclsu\", \"soyad\": \"Gemici\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 98, \"y2\": 95, \"q1\": 86, \"q2\": 85, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 100, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_853\", \"no\": \"853\", \"ad\": \"M\u00fcnife Berra\", \"soyad\": \"Talas\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 94, \"y2\": 100, \"q1\": 99, \"q2\": 75, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 100, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_857\", \"no\": \"857\", \"ad\": \"Eren\", \"soyad\": \"D\u00f6kmeci\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 86, \"y2\": 100, \"q1\": 99, \"q2\": 80, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 98, \"p2\": 100}, \"d2\": {\"y1\": 91, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_860\", \"no\": \"860\", \"ad\": \"Ecrin\", \"soyad\": \"Hal\u0131c\u0131\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 86, \"y2\": 87, \"q1\": 66, \"q2\": 55, \"q3\": 87.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 91.5, \"p2\": 100}, \"d2\": {\"y1\": 88, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_870\", \"no\": \"870\", \"ad\": \"Zehra Naz\", \"soyad\": \"\u00d6zkan\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 96, \"y2\": 96, \"q1\": 87, \"q2\": 70, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 89, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_873\", \"no\": \"873\", \"ad\": \"Nazl\u0131\", \"soyad\": \"\u00d6zmen\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 74, \"y2\": 88, \"q1\": 69, \"q2\": 70, \"q3\": 94.5, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 88, \"p2\": 95}, \"d2\": {\"y1\": 61, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_881\", \"no\": \"881\", \"ad\": \"Arda\", \"soyad\": \"Bu\u011fu\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 88, \"y2\": 97, \"q1\": 68, \"q2\": 60, \"q3\": 100, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 98.2, \"p2\": 100}, \"d2\": {\"y1\": 97, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_953\", \"no\": \"953\", \"ad\": \"Berat Arda\", \"soyad\": \"Keklicek\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 94, \"y2\": 78, \"q1\": 76, \"q2\": 75, \"q3\": 77, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 91, \"p2\": 95}, \"d2\": {\"y1\": 91, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_964\", \"no\": \"964\", \"ad\": \"\u00c7a\u011fatay\", \"soyad\": \"\u00c7if\u00e7i\", \"sinif\": \"10-B\", \"donemler\": {\"d1\": {\"y1\": 92, \"y2\": 70, \"q1\": 55, \"q2\": 50, \"q3\": 84, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 86, \"p2\": 90}, \"d2\": {\"y1\": 91, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_727\", \"no\": \"727\", \"ad\": \"Ahmet Mustafa\", \"soyad\": \"Mert\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 86, \"y2\": 91, \"q1\": 73, \"q2\": 75, \"q3\": 100, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 97.24, \"p2\": 100}, \"d2\": {\"y1\": 88, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_730\", \"no\": \"730\", \"ad\": \"Mehmet Esat\", \"soyad\": \"G\u00fcrelli\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 94, \"y2\": 92, \"q1\": 96, \"q2\": 50, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 98, \"p2\": 100}, \"d2\": {\"y1\": 96, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_745\", \"no\": \"745\", \"ad\": \"Yahya\", \"soyad\": \"Tever\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 83, \"y2\": 81, \"q1\": 55, \"q2\": 65, \"q3\": 87.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 89.68, \"p2\": 100}, \"d2\": {\"y1\": 91, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_746\", \"no\": \"746\", \"ad\": \"Abdullah Enes\", \"soyad\": \"G\u00fclerli\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 77, \"y2\": 88, \"q1\": 98, \"q2\": 90, \"q3\": 100, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 95.8, \"p2\": 100}, \"d2\": {\"y1\": 88, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_753\", \"no\": \"753\", \"ad\": \"Furkan Efe\", \"soyad\": \"K\u00fcy\u00fcko\u011flu\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 80, \"y2\": 80, \"q1\": 63, \"q2\": 65, \"q3\": null, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 85, \"p2\": 95}, \"d2\": {\"y1\": 79, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_755\", \"no\": \"755\", \"ad\": \"Ali Kemal\", \"soyad\": \"Yaman\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 87, \"y2\": 90, \"q1\": 60, \"q2\": null, \"q3\": 91, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 93.5, \"p2\": 100}, \"d2\": {\"y1\": 97, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_764\", \"no\": \"764\", \"ad\": \"U\u011fur\", \"soyad\": \"Bozh\u00fcy\u00fck\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 88, \"y2\": 79, \"q1\": 58, \"q2\": 40, \"q3\": null, \"odev\": 100, \"kat\": 1, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 1, \"p1\": 88.5, \"p2\": 95}, \"d2\": {\"y1\": 66, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_766\", \"no\": \"766\", \"ad\": \"Ahmet Faruk\", \"soyad\": \"Ekin\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 85, \"y2\": 76, \"q1\": 57, \"q2\": 45, \"q3\": 77, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 85.5, \"p2\": 90}, \"d2\": {\"y1\": 86, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_787\", \"no\": \"787\", \"ad\": \"Ya\u011f\u0131z Efe\", \"soyad\": \"Akg\u00fcl\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 94, \"y2\": 93, \"q1\": 75, \"q2\": 80, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 98.5, \"p2\": 100}, \"d2\": {\"y1\": 100, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_791\", \"no\": \"791\", \"ad\": \"Zeynep\", \"soyad\": \"Y\u0131ld\u0131z\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 83, \"y2\": 65, \"q1\": 49, \"q2\": 40, \"q3\": 73.5, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 1, \"p1\": 79, \"p2\": 90}, \"d2\": {\"y1\": 82, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_796\", \"no\": \"796\", \"ad\": \"Semih\", \"soyad\": \"Demir\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 100, \"y2\": 85, \"q1\": 84, \"q2\": null, \"q3\": 91, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 97.5, \"p2\": 100}, \"d2\": {\"y1\": 90, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_797\", \"no\": \"797\", \"ad\": \"Ecrin\", \"soyad\": \"Ok\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 79, \"y2\": 80, \"q1\": 62, \"q2\": 60, \"q3\": 87.5, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 85.88, \"p2\": 95}, \"d2\": {\"y1\": 80, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_801\", \"no\": \"801\", \"ad\": \"Ya\u011fmur \u00c7a\u011fla\", \"soyad\": \"Part\u0131\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 98, \"y2\": 100, \"q1\": 98, \"q2\": 85, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 97, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_813\", \"no\": \"813\", \"ad\": \"G\u00f6ksu\", \"soyad\": \"Aksoylu\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 87, \"y2\": 91, \"q1\": 60, \"q2\": 75, \"q3\": 84, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 94, \"p2\": 100}, \"d2\": {\"y1\": 85, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_818\", \"no\": \"818\", \"ad\": \"Zeynep\", \"soyad\": \"Kuru\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 86, \"y2\": 86, \"q1\": 81, \"q2\": 65, \"q3\": 100, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 96.64, \"p2\": 100}, \"d2\": {\"y1\": 95, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_829\", \"no\": \"829\", \"ad\": \"Yaren\", \"soyad\": \"G\u00f6kay\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 77, \"y2\": 85, \"q1\": 89, \"q2\": null, \"q3\": 94, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 90.96, \"p2\": 100}, \"d2\": {\"y1\": 90, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_832\", \"no\": \"832\", \"ad\": \"Ay\u015fe Naz\", \"soyad\": \"Harmanc\u0131\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 82, \"y2\": 70, \"q1\": 63, \"q2\": 50, \"q3\": 70, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 81, \"p2\": 90}, \"d2\": {\"y1\": 83, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_834\", \"no\": \"834\", \"ad\": \"Ecrin Asya\", \"soyad\": \"Emek\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 88, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": 0, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 93, \"p2\": 100}, \"d2\": {\"y1\": 93, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_844\", \"no\": \"844\", \"ad\": \"Muhammed Taha\", \"soyad\": \"Binici\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 63, \"y2\": 58, \"q1\": null, \"q2\": 35, \"q3\": null, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 3, \"tut\": 3, \"sur\": 3, \"p1\": 65.5, \"p2\": 70}, \"d2\": {\"y1\": 75, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_855\", \"no\": \"855\", \"ad\": \"Ela\", \"soyad\": \"\u00d6g\u00fcl\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 91, \"y2\": 100, \"q1\": 86, \"q2\": 65, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 87, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_861\", \"no\": \"861\", \"ad\": \"Ayaz\", \"soyad\": \"\u00d6ks\u00fcz\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 81, \"y2\": 77, \"q1\": 61, \"q2\": 35, \"q3\": 66.5, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 84, \"p2\": 90}, \"d2\": {\"y1\": 76, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_889\", \"no\": \"889\", \"ad\": \"Eyl\u00fcl Duru\", \"soyad\": \"Ayd\u0131n\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 77, \"y2\": 88, \"q1\": 65, \"q2\": 55, \"q3\": 91, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 91.48, \"p2\": 100}, \"d2\": {\"y1\": 85, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_892\", \"no\": \"892\", \"ad\": \"Eda\", \"soyad\": \"Avat\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 84, \"y2\": 90, \"q1\": 82, \"q2\": 70, \"q3\": 87.5, \"odev\": 100, \"kat\": 4, \"haz\": 4, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 92, \"p2\": 100}, \"d2\": {\"y1\": 85, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_893\", \"no\": \"893\", \"ad\": \"Yasemin\", \"soyad\": \"Tan\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 68, \"y2\": 70, \"q1\": null, \"q2\": 55, \"q3\": 73.5, \"odev\": 100, \"kat\": 4, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 79.04, \"p2\": 95}, \"d2\": {\"y1\": 75, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_897\", \"no\": \"897\", \"ad\": \"Melike\", \"soyad\": \"\u015eent\u00fcrk\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 94, \"y2\": 87, \"q1\": 81, \"q2\": 55, \"q3\": null, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 95.5, \"p2\": 100}, \"d2\": {\"y1\": 80, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_949\", \"no\": \"949\", \"ad\": \"Ayb\u00fcke\", \"soyad\": \"Hac\u0131osmano\u011flu\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 72, \"y2\": 85, \"q1\": 75, \"q2\": 45, \"q3\": null, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 83.5, \"p2\": 100}, \"d2\": {\"y1\": 72, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_957\", \"no\": \"957\", \"ad\": \"Taha\", \"soyad\": \"Suba\u015f\u0131\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 71, \"y2\": 70, \"q1\": 61, \"q2\": 50, \"q3\": 77, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 3, \"tut\": 3, \"sur\": 1, \"p1\": 75.5, \"p2\": 70}, \"d2\": {\"y1\": 75, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_965\", \"no\": \"965\", \"ad\": \"Mehmet Ali\", \"soyad\": \"Artun\", \"sinif\": \"10-C\", \"donemler\": {\"d1\": {\"y1\": 90, \"y2\": 82, \"q1\": 69, \"q2\": null, \"q3\": 77, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 91, \"p2\": 95}, \"d2\": {\"y1\": 67, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_645\", \"no\": \"645\", \"ad\": \"Bera\", \"soyad\": \"\u00dcnal\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 92, \"y2\": 93, \"q1\": 83, \"q2\": 70, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 97.5, \"p2\": 100}, \"d2\": {\"y1\": 100, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_719\", \"no\": \"719\", \"ad\": \"Ali Eren\", \"soyad\": \"Demira\u011f\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 74, \"y2\": 86, \"q1\": 68, \"q2\": 60, \"q3\": null, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 85, \"p2\": 100}, \"d2\": {\"y1\": 84, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_724\", \"no\": \"724\", \"ad\": \"Hevin\", \"soyad\": \"Y\u0131ld\u0131r\u0131m\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 74, \"y2\": 78, \"q1\": 88, \"q2\": 70, \"q3\": 87.5, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 85.28, \"p2\": 95}, \"d2\": {\"y1\": 86, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_743\", \"no\": \"743\", \"ad\": \"Batuhan\", \"soyad\": \"Baran\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 80, \"y2\": 62, \"q1\": 54, \"q2\": 45, \"q3\": null, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 76, \"p2\": 90}, \"d2\": {\"y1\": 74, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_758\", \"no\": \"758\", \"ad\": \"Elif\", \"soyad\": \"\u00d6zdemir\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 85, \"y2\": 85, \"q1\": 68, \"q2\": 55, \"q3\": 70.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 90, \"p2\": 100}, \"d2\": {\"y1\": 88, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_770\", \"no\": \"770\", \"ad\": \"Furkan \u0130lteber\", \"soyad\": \"\u00c7ay\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 87, \"y2\": 93, \"q1\": 84, \"q2\": 70, \"q3\": null, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 95, \"p2\": 100}, \"d2\": {\"y1\": 100, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_786\", \"no\": \"786\", \"ad\": \"Ahmet Emre\", \"soyad\": \"Damkac\u0131\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 91, \"y2\": 86, \"q1\": 94, \"q2\": 60, \"q3\": 84, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 94.36, \"p2\": 100}, \"d2\": {\"y1\": 83, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_789\", \"no\": \"789\", \"ad\": \"H\u00fclya Asya\", \"soyad\": \"Cura\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 84, \"y2\": 81, \"q1\": 81, \"q2\": 60, \"q3\": 91, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 88.28, \"p2\": 100}, \"d2\": {\"y1\": 76, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_798\", \"no\": \"798\", \"ad\": \"Furkan\", \"soyad\": \"G\u00fcnday\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 75, \"y2\": 67, \"q1\": 63, \"q2\": 45, \"q3\": null, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 76, \"p2\": 90}, \"d2\": {\"y1\": 83, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_803\", \"no\": \"803\", \"ad\": \"\u00c7a\u011fatay\", \"soyad\": \"Tosun\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 73, \"y2\": 75, \"q1\": 52, \"q2\": 45, \"q3\": 80.5, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 79, \"p2\": 90}, \"d2\": {\"y1\": 74, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_805\", \"no\": \"805\", \"ad\": \"Eslem\", \"soyad\": \"Ayk\u0131n\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 91, \"y2\": 91, \"q1\": 88, \"q2\": 60, \"q3\": 91, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 96, \"p2\": 100}, \"d2\": {\"y1\": 95, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_810\", \"no\": \"810\", \"ad\": \"\u00d6zlem\", \"soyad\": \"Tam\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 77, \"y2\": 85, \"q1\": 84, \"q2\": 65, \"q3\": 84, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 87.76, \"p2\": 100}, \"d2\": {\"y1\": 90, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_812\", \"no\": \"812\", \"ad\": \"Orhan Tu\u011fra\", \"soyad\": \"Duman\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 91, \"y2\": 81, \"q1\": 80, \"q2\": 80, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 94, \"p2\": 100}, \"d2\": {\"y1\": 88, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_817\", \"no\": \"817\", \"ad\": \"Resul Ey\u00fcp\", \"soyad\": \"K\u0131z\u0131lku\u015f\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 82, \"y2\": 85, \"q1\": 35, \"q2\": 35, \"q3\": 70, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 88.5, \"p2\": 100}, \"d2\": {\"y1\": 74, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_825\", \"no\": \"825\", \"ad\": \"Seher\", \"soyad\": \"Dengiz\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 90, \"y2\": 93, \"q1\": 89, \"q2\": 60, \"q3\": 91, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 96.5, \"p2\": 100}, \"d2\": {\"y1\": 87, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_827\", \"no\": \"827\", \"ad\": \"Muhammed Melih\", \"soyad\": \"Zorlu\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 88, \"y2\": 85, \"q1\": null, \"q2\": null, \"q3\": 66.5, \"odev\": 100, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": 91.5, \"p2\": 100}, \"d2\": {\"y1\": 96, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_831\", \"no\": \"831\", \"ad\": \"Muhammed Yusuf\", \"soyad\": \"Sertkaya\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 95, \"y2\": 85, \"q1\": 78, \"q2\": 75, \"q3\": 98, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 95, \"p2\": 100}, \"d2\": {\"y1\": 93, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_841\", \"no\": \"841\", \"ad\": \"2025-09-01 00:00:00\", \"soyad\": \"Sancakl\u0131\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 92, \"y2\": 95, \"q1\": 82, \"q2\": 65, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 98.5, \"p2\": 100}, \"d2\": {\"y1\": 93, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_851\", \"no\": \"851\", \"ad\": \"Berra\", \"soyad\": \"Can\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 82, \"y2\": 88, \"q1\": 55, \"q2\": null, \"q3\": 84, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 2, \"p1\": 90, \"p2\": 95}}}, {\"id\": \"o_865\", \"no\": \"865\", \"ad\": \"Esma Nur\", \"soyad\": \"Ate\u015f\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 86, \"y2\": 95, \"q1\": 77, \"q2\": 70, \"q3\": 100, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 95.5, \"p2\": 100}, \"d2\": {\"y1\": 96, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_878\", \"no\": \"878\", \"ad\": \"Erva Ya\u011fmur\", \"soyad\": \"Akku\u015f\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 89, \"y2\": 82, \"q1\": 86, \"q2\": 60, \"q3\": 84, \"odev\": 100, \"kat\": 3, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 90.5, \"p2\": 100}, \"d2\": {\"y1\": 90, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_882\", \"no\": \"882\", \"ad\": \"R\u00fczgar\", \"soyad\": \"Kurt\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 86, \"y2\": 70, \"q1\": 35, \"q2\": 45, \"q3\": 73.5, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 83, \"p2\": 100}, \"d2\": {\"y1\": 91, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_894\", \"no\": \"894\", \"ad\": \"Ali Eren\", \"soyad\": \"G\u00f6ksal\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 76, \"y2\": 64, \"q1\": 41, \"q2\": 20, \"q3\": 56, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 1, \"p1\": 75, \"p2\": 90}, \"d2\": {\"y1\": 58, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_895\", \"no\": \"895\", \"ad\": \"Ay\u015fe Sude\", \"soyad\": \"At\u0131lgan\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 92, \"y2\": 89, \"q1\": 67, \"q2\": 80, \"q3\": 87.5, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 95.5, \"p2\": 100}, \"d2\": {\"y1\": 90, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_900\", \"no\": \"900\", \"ad\": \"Mehmet Alperen\", \"soyad\": \"Arslan\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 95, \"y2\": 92, \"q1\": 74, \"q2\": 75, \"q3\": 91, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 98.5, \"p2\": 100}, \"d2\": {\"y1\": 81, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_959\", \"no\": \"959\", \"ad\": \"Eda Su\", \"soyad\": \"K\u00f6se\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 80, \"y2\": 85, \"q1\": null, \"q2\": 75, \"q3\": null, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 87.5, \"p2\": 100}, \"d2\": {\"y1\": 83, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_962\", \"no\": \"962\", \"ad\": \"Simay\", \"soyad\": \"\u00d6\u011f\u00fctc\u00fc\", \"sinif\": \"10-D\", \"donemler\": {\"d1\": {\"y1\": 93, \"y2\": 96, \"q1\": 94, \"q2\": 75, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 99.5, \"p2\": 100}, \"d2\": {\"y1\": 95, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_630\", \"no\": \"630\", \"ad\": \"Azra\", \"soyad\": \"Durgun\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 88, \"y2\": 100, \"q1\": 75, \"q2\": 65, \"q3\": 100, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 99, \"p2\": 100}, \"d2\": {\"y1\": 91, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_716\", \"no\": \"716\", \"ad\": \"Kerem Erzade\", \"soyad\": \"Akd\u0131\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 88, \"y2\": 70, \"q1\": 65, \"q2\": 35, \"q3\": 91, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 90.64, \"p2\": 100}, \"d2\": {\"y1\": 81, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_728\", \"no\": \"728\", \"ad\": \"Zeynep\", \"soyad\": \"\u00c7ukadar\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 86, \"y2\": 95, \"q1\": 88, \"q2\": 70, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 96.76, \"p2\": 100}, \"d2\": {\"y1\": 88, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_731\", \"no\": \"731\", \"ad\": \"Bahattin Taha\", \"soyad\": \"\u00d6zeren\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 69, \"y2\": 72, \"q1\": null, \"q2\": 50, \"q3\": 73.5, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 3, \"tut\": 3, \"sur\": 3, \"p1\": 75.5, \"p2\": 80}, \"d2\": {\"y1\": 90, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_734\", \"no\": \"734\", \"ad\": \"Rengin Bilge\", \"soyad\": \"Pur\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 91, \"y2\": 73, \"q1\": 37, \"q2\": 20, \"q3\": null, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 3, \"tut\": 3, \"sur\": 1, \"p1\": 87, \"p2\": 95}}}, {\"id\": \"o_742\", \"no\": \"742\", \"ad\": \"Ali\", \"soyad\": \"\u015eahin\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 58, \"y2\": 70, \"q1\": 27, \"q2\": 15, \"q3\": 80.5, \"odev\": 100, \"kat\": 2, \"haz\": 2, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 75.6, \"p2\": 90}, \"d2\": {\"y1\": 75, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_752\", \"no\": \"752\", \"ad\": \"K\u00fcbranur\", \"soyad\": \"Karhan\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 69, \"y2\": 75, \"q1\": 32, \"q2\": 40, \"q3\": 91, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 85.76, \"p2\": 95}, \"d2\": {\"y1\": 92, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_781\", \"no\": \"781\", \"ad\": \"I\u015f\u0131l\", \"soyad\": \"G\u00fcm\u00fc\u015f\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 96, \"y2\": 93, \"q1\": 64, \"q2\": 60, \"q3\": null, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 99.5, \"p2\": 100}, \"d2\": {\"y1\": 87, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_784\", \"no\": \"784\", \"ad\": \"Kuzey\", \"soyad\": \"Say\u0131g\u0131o\u011flu\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 76, \"y2\": 64, \"q1\": 57, \"q2\": 50, \"q3\": 73.5, \"odev\": 100, \"kat\": 2, \"haz\": 2, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 75.28, \"p2\": 90}, \"d2\": {\"y1\": 76, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_792\", \"no\": \"792\", \"ad\": \"Ela\", \"soyad\": \"G\u00fcltekin\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 80, \"y2\": 70, \"q1\": 26, \"q2\": 30, \"q3\": 87.5, \"odev\": 100, \"kat\": 2, \"haz\": 2, \"sor\": 5, \"tut\": 5, \"sur\": 2, \"p1\": 80.8, \"p2\": 100}, \"d2\": {\"y1\": 70, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_804\", \"no\": \"804\", \"ad\": \"Demir Altan\", \"soyad\": \"Ak\u0131nc\u0131\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 85, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": 100, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": 90, \"p2\": 100}, \"d2\": {\"y1\": 93, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_808\", \"no\": \"808\", \"ad\": \"Ege\", \"soyad\": \"\u00d6zden\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 88, \"y2\": 90, \"q1\": 98, \"q2\": 55, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 96.4, \"p2\": 100}, \"d2\": {\"y1\": 92, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_815\", \"no\": \"815\", \"ad\": \"Merve\", \"soyad\": \"\u0130lba\u015f\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 89, \"y2\": 72, \"q1\": 77, \"q2\": 55, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 94.36, \"p2\": 100}, \"d2\": {\"y1\": 89, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_821\", \"no\": \"821\", \"ad\": \"Arda\", \"soyad\": \"Karada\u015f\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 87, \"y2\": 91, \"q1\": 73, \"q2\": 70, \"q3\": 100, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 97.36, \"p2\": 100}, \"d2\": {\"y1\": 100, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_838\", \"no\": \"838\", \"ad\": \"Bet\u00fcl\", \"soyad\": \"Tezel\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 89, \"y2\": 97, \"q1\": 79, \"q2\": 65, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 98, \"p2\": 100}, \"d2\": {\"y1\": 100, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_847\", \"no\": \"847\", \"ad\": \"Ahmet Tar\u0131k\", \"soyad\": \"Karaer\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 92, \"y2\": 100, \"q1\": 75, \"q2\": 90, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 83, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_856\", \"no\": \"856\", \"ad\": \"Umut Ka\u011fan\", \"soyad\": \"Yazgan\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 87, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": 100, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": 92, \"p2\": 100}}}, {\"id\": \"o_862\", \"no\": \"862\", \"ad\": \"Melih\", \"soyad\": \"Ate\u015f\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 88, \"y2\": 81, \"q1\": 54, \"q2\": 50, \"q3\": 80.5, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 89.5, \"p2\": 95}, \"d2\": {\"y1\": 77, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_871\", \"no\": \"871\", \"ad\": \"\u0130remsu\", \"soyad\": \"G\u00fcneri\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 94, \"y2\": 97, \"q1\": 65, \"q2\": 70, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 87, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_874\", \"no\": \"874\", \"ad\": \"Hazal\", \"soyad\": \"Ergin\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 87, \"y2\": 94, \"q1\": 64, \"q2\": 60, \"q3\": null, \"odev\": 100, \"kat\": 4, \"haz\": 4, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 95.5, \"p2\": 100}, \"d2\": {\"y1\": 88, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_877\", \"no\": \"877\", \"ad\": \"Alpar Kemal\", \"soyad\": \"Ta\u015ftan\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 63, \"y2\": 61, \"q1\": 55, \"q2\": null, \"q3\": 87.5, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 76.88, \"p2\": 90}, \"d2\": {\"y1\": 84, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_880\", \"no\": \"880\", \"ad\": \"\u00d6mer Taha\", \"soyad\": \"K\u0131z\u0131lba\u011fl\u0131\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 77, \"y2\": 64, \"q1\": 61, \"q2\": null, \"q3\": 84, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 85.24, \"p2\": 85}, \"d2\": {\"y1\": 85, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_886\", \"no\": \"886\", \"ad\": \"Kerem Ka\u011fan\", \"soyad\": \"\u00c7and\u0131r\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 90, \"y2\": 93, \"q1\": 88, \"q2\": 70, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 97, \"p2\": 100}, \"d2\": {\"y1\": 94, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_890\", \"no\": \"890\", \"ad\": \"Defne Duru\", \"soyad\": \"Cinel\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 86, \"y2\": 73, \"q1\": 57, \"q2\": null, \"q3\": 87.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 89.08, \"p2\": 100}, \"d2\": {\"y1\": 67, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_950\", \"no\": \"950\", \"ad\": \"Onur\", \"soyad\": \"\u00c7elebi\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 83, \"y2\": 73, \"q1\": 54, \"q2\": 65, \"q3\": 77, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 83.68, \"p2\": 95}, \"d2\": {\"y1\": 75, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_952\", \"no\": \"952\", \"ad\": \"\u0130rem\", \"soyad\": \"\u00c7elik\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 79, \"y2\": 87, \"q1\": 80, \"q2\": 60, \"q3\": 80.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 88, \"p2\": 95}, \"d2\": {\"y1\": 93, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_958\", \"no\": \"958\", \"ad\": \"Ay\u015fe Melek\", \"soyad\": \"G\u00fcler\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 92, \"y2\": 90, \"q1\": 82, \"q2\": 75, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 96.88, \"p2\": 100}, \"d2\": {\"y1\": 93, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_968\", \"no\": \"968\", \"ad\": \"Defne\", \"soyad\": \"Madan\", \"sinif\": \"10-E\", \"donemler\": {\"d1\": {\"y1\": 90, \"y2\": 93, \"q1\": 97, \"q2\": 65, \"q3\": 100, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 97.96, \"p2\": 100}, \"d2\": {\"y1\": 89, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_670\", \"no\": \"670\", \"ad\": \"Beg\u00fcm\", \"soyad\": \"Tekin\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 82, \"y2\": 76, \"q1\": 56, \"q2\": 45, \"q3\": 73.5, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 84, \"p2\": 95}, \"d2\": {\"y1\": 70, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_722\", \"no\": \"722\", \"ad\": \"Eray\", \"soyad\": \"E\u011fri\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 73, \"y2\": 59, \"q1\": 42, \"q2\": 50, \"q3\": 87.5, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 81.04, \"p2\": 90}, \"d2\": {\"y1\": 90, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_732\", \"no\": \"732\", \"ad\": \"Beril\", \"soyad\": \"\u00c7ilalio\u011flu\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 91, \"y2\": 95, \"q1\": 72, \"q2\": 55, \"q3\": 77, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 98, \"p2\": 100}, \"d2\": {\"y1\": 81, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_738\", \"no\": \"738\", \"ad\": \"Melis\", \"soyad\": \"Turgut\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 94, \"y2\": 100, \"q1\": null, \"q2\": 75, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 81, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_747\", \"no\": \"747\", \"ad\": \"Ahmet Fatih\", \"soyad\": \"\u00c7al\u0131\u015fkan\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 82, \"y2\": 78, \"q1\": 72, \"q2\": 55, \"q3\": null, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 85, \"p2\": 95}, \"d2\": {\"y1\": 76, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_751\", \"no\": \"751\", \"ad\": \"Tar\u0131k\", \"soyad\": \"Olgun\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 83, \"y2\": 91, \"q1\": 85, \"q2\": 50, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 95.92, \"p2\": 100}, \"d2\": {\"y1\": 89, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_762\", \"no\": \"762\", \"ad\": \"Muhammed Salih\", \"soyad\": \"Artun\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 92, \"y2\": 60, \"q1\": 78, \"q2\": 40, \"q3\": null, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 1, \"p1\": 81, \"p2\": 90}, \"d2\": {\"y1\": 67, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_763\", \"no\": \"763\", \"ad\": \"Hatice \u015eevval\", \"soyad\": \"Buka\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 84, \"y2\": 76, \"q1\": 64, \"q2\": 70, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 92.56, \"p2\": 100}, \"d2\": {\"y1\": 82, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_775\", \"no\": \"775\", \"ad\": \"Ya\u011f\u0131zalp\", \"soyad\": \"Timurkutluk\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 72, \"y2\": 75, \"q1\": 56, \"q2\": 40, \"q3\": 91, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 86.12, \"p2\": 90}, \"d2\": {\"y1\": 97, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_785\", \"no\": \"785\", \"ad\": \"Abd\u00fclhamit\", \"soyad\": \"Arslan\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 65, \"y2\": 64, \"q1\": 58, \"q2\": 30, \"q3\": 84, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 79, \"p2\": 80}, \"d2\": {\"y1\": 77, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_800\", \"no\": \"800\", \"ad\": \"Fikret\", \"soyad\": \"G\u00fcltekin\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 75, \"y2\": 72, \"q1\": 90, \"q2\": 50, \"q3\": 80.5, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 84.04, \"p2\": 95}, \"d2\": {\"y1\": 63, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_823\", \"no\": \"823\", \"ad\": \"Beyza\", \"soyad\": \"Karaermi\u015f\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 94, \"y2\": 93, \"q1\": 73, \"q2\": 65, \"q3\": null, \"odev\": 100, \"kat\": 4, \"haz\": 4, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 98.5, \"p2\": 100}, \"d2\": {\"y1\": 89, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_839\", \"no\": \"839\", \"ad\": \"Sait Eymen\", \"soyad\": \"Tun\u00e7\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 65, \"y2\": 50, \"q1\": null, \"q2\": 30, \"q3\": 70, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 1, \"p1\": 65.8, \"p2\": 80}, \"d2\": {\"y1\": 70, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_842\", \"no\": \"842\", \"ad\": \"Hasan H\u00fcseyin\", \"soyad\": \"Arslan\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 85, \"y2\": 87, \"q1\": 80, \"q2\": 60, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 94, \"p2\": 100}, \"d2\": {\"y1\": 97, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_846\", \"no\": \"846\", \"ad\": \"Kardelen\", \"soyad\": \"\u00c7elik\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 70, \"y2\": 88, \"q1\": 44, \"q2\": 45, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 94, \"p2\": 100}, \"d2\": {\"y1\": 100, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_848\", \"no\": \"848\", \"ad\": \"Yusuf\", \"soyad\": \"\u00d6ncel\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 77, \"y2\": null, \"q1\": 84, \"q2\": 60, \"q3\": 94, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 88.4, \"p2\": 95}, \"d2\": {\"y1\": 84, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_854\", \"no\": \"854\", \"ad\": \"Bengi Beren\", \"soyad\": \"Kuru\u00e7ay\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 89, \"y2\": 92, \"q1\": 75, \"q2\": 65, \"q3\": 94.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 95.5, \"p2\": 100}, \"d2\": {\"y1\": 82, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_858\", \"no\": \"858\", \"ad\": \"Azra R\u00fcya\", \"soyad\": \"Metin\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 87, \"y2\": 80, \"q1\": 74, \"q2\": 80, \"q3\": 84, \"odev\": 100, \"kat\": 4, \"haz\": 4, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 88.5, \"p2\": 100}, \"d2\": {\"y1\": 93, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_863\", \"no\": \"863\", \"ad\": \"Beren\", \"soyad\": \"C\u00fcre\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 89, \"y2\": 88, \"q1\": 82, \"q2\": 65, \"q3\": 87.5, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 93.5, \"p2\": 100}, \"d2\": {\"y1\": 89, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_864\", \"no\": \"864\", \"ad\": \"Arda\", \"soyad\": \"Kurtulu\u015f\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 80, \"y2\": 82, \"q1\": 91, \"q2\": 60, \"q3\": null, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 86.32, \"p2\": 95}, \"d2\": {\"y1\": 91, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_867\", \"no\": \"867\", \"ad\": \"H\u00fcseyin Hamdi Aziz\", \"soyad\": \"\u00c7ebi\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 89, \"y2\": 81, \"q1\": 73, \"q2\": 75, \"q3\": 91, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 92.08, \"p2\": 100}, \"d2\": {\"y1\": 93, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_869\", \"no\": \"869\", \"ad\": \"\u0130rem\", \"soyad\": \"Tamg\u00fcney\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 79, \"y2\": 82, \"q1\": 77, \"q2\": 70, \"q3\": 91, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 91, \"p2\": 100}, \"d2\": {\"y1\": 92, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_875\", \"no\": \"875\", \"ad\": \"Mert\", \"soyad\": \"Peynirci\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 78, \"y2\": 94, \"q1\": 72, \"q2\": 65, \"q3\": 98, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 95.68, \"p2\": 100}, \"d2\": {\"y1\": 100, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_876\", \"no\": \"876\", \"ad\": \"\u00c7a\u011fla\", \"soyad\": \"Y\u0131lmaz\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 65, \"y2\": 52, \"q1\": 62, \"q2\": 25, \"q3\": 66.5, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 1, \"p1\": 64.36, \"p2\": 90}, \"d2\": {\"y1\": 72, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_883\", \"no\": \"883\", \"ad\": \"G\u00fclce Naz\", \"soyad\": \"\u00c7ay\u0131r\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 88, \"y2\": 92, \"q1\": 62, \"q2\": 65, \"q3\": 91, \"odev\": 100, \"kat\": 5, \"haz\": 5, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 95, \"p2\": 100}, \"d2\": {\"y1\": 94, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_885\", \"no\": \"885\", \"ad\": \"\u0130smet Yi\u011fit\", \"soyad\": \"Virdil\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 73, \"y2\": 73, \"q1\": 51, \"q2\": 60, \"q3\": null, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 3, \"p1\": 78, \"p2\": 95}, \"d2\": {\"y1\": 93, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_887\", \"no\": \"887\", \"ad\": \"Zeynep\", \"soyad\": \"Benli\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 93, \"y2\": 100, \"q1\": 94, \"q2\": 65, \"q3\": 91, \"odev\": 100, \"kat\": 3, \"haz\": 3, \"sor\": 5, \"tut\": 5, \"sur\": 5, \"p1\": 100, \"p2\": 100}, \"d2\": {\"y1\": 100, \"y2\": null, \"q1\": null, \"q2\": null, \"q3\": null, \"odev\": null, \"kat\": null, \"haz\": null, \"sor\": null, \"tut\": null, \"sur\": null, \"p1\": null, \"p2\": null}}}, {\"id\": \"o_899\", \"no\": \"899\", \"ad\": \"Melek\", \"soyad\": \"Mamar\", \"sinif\": \"10-F\", \"donemler\": {\"d1\": {\"y1\": 89, \"y2\": 66, \"q1\": 48, \"q2\": null, \"q3\": 66.5, \"odev\": 100, \"kat\": 1, \"haz\": 1, \"sor\": 5, \"tut\": 5, \"sur\": 1, \"p1\": 82.5, \"p2\": 90}}}], \"aktifDonem\": \"d2\", \"aktifSinif\": \"10-E\"}}");
+    localStorage.setItem('nd_aktif', "g_1776627505677");
+  } else {
+    // Sadece D2 Y1 güncelle (eksikse)
+    try {
+      var g = JSON.parse(localStorage.getItem('nd_gruplar'));
+      var aktif = localStorage.getItem('nd_aktif');
+      var gr = g[aktif];
+      if (gr) {
+        var puanlar = {"795": 100, "896": 100, "788": 100, "840": 100, "853": 100, "787": 100, "645": 100, "770": 100, "821": 100, "838": 100, "846": 100, "875": 100, "887": 100, "768": 97, "820": 97, "881": 97, "755": 97, "801": 97, "775": 97, "842": 97, "730": 96, "827": 96, "865": 96, "837": 95, "818": 95, "805": 95, "962": 95, "718": 94, "760": 94, "799": 94, "886": 94, "883": 94, "714": 93, "834": 93, "831": 93, "841": 93, "804": 93, "952": 93, "958": 93, "858": 93, "867": 93, "885": 93, "809": 92, "752": 92, "808": 92, "869": 92, "857": 91, "953": 91, "964": 91, "745": 91, "882": 91, "630": 91, "864": 91, "773": 90, "969": 90, "796": 90, "829": 90, "810": 90, "878": 90, "895": 90, "731": 90, "722": 90, "870": 89, "815": 89, "968": 89, "751": 89, "823": 89, "863": 89, "850": 88, "963": 88, "780": 88, "860": 88, "727": 88, "746": 88, "758": 88, "812": 88, "728": 88, "874": 88, "866": 87, "710": 87, "713": 87, "778": 87, "855": 87, "825": 87, "781": 87, "871": 87, "774": 86, "729": 86, "766": 86, "724": 86, "725": 85, "826": 85, "739": 85, "813": 85, "889": 85, "892": 85, "880": 85, "582": 84, "776": 84, "719": 84, "877": 84, "848": 84, "872": 83, "832": 83, "786": 83, "798": 83, "959": 83, "847": 83, "791": 82, "763": 82, "854": 82, "802": 81, "900": 81, "716": 81, "732": 81, "738": 81, "750": 80, "797": 80, "897": 80, "790": 79, "765": 79, "753": 79, "767": 78, "879": 77, "888": 77, "862": 77, "785": 77, "779": 76, "861": 76, "789": 76, "784": 76, "747": 76, "844": 75, "893": 75, "957": 75, "742": 75, "950": 75, "743": 74, "803": 74, "817": 74, "806": 73, "740": 72, "709": 72, "949": 72, "876": 72, "761": 71, "868": 70, "792": 70, "670": 70, "839": 70, "772": 68, "965": 67, "890": 67, "762": 67, "764": 66, "800": 63, "769": 62, "835": 62, "873": 61, "749": 60, "894": 58};
+        var guncellendi = 0;
+        gr.ogrenciler.forEach(function(o){
+          var p = puanlar[o.no];
+          if (p === undefined) return;
+          if (!o.donemler) o.donemler = {};
+          if (!o.donemler.d2) o.donemler.d2 = {y1:null,y2:null,q1:null,q2:null,q3:null,odev:null,kat:null,haz:null,sor:null,tut:null,sur:null,p1:null,p2:null};
+          if (o.donemler.d2.y1 === null || o.donemler.d2.y1 === undefined) {
+            o.donemler.d2.y1 = p;
+            guncellendi++;
+          }
+        });
+        if (guncellendi > 0) localStorage.setItem('nd_gruplar', JSON.stringify(g));
+      }
+    } catch(e) {}
+  }
+})();
+// __ND_AUTOLOAD_END__
+</script>
+</body>
+</html>
